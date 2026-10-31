@@ -1,5 +1,8 @@
 import * as React from "react";
 import Link from "next/link";
+import { requireAdmin } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
+import { formatPaiseToINR } from "@/lib/utils";
 import {
   Card,
   CardHeader,
@@ -19,6 +22,35 @@ import {
 } from "lucide-react";
 
 export default async function AdminDashboardPage() {
+  await requireAdmin();
+
+  // Fetch operational overview metrics
+  const [pendingApprovals, activeTournaments, scheduledMatches, verifiedRevenue] =
+    await Promise.all([
+      prisma.payment.count({
+        where: { status: "UNDER_VERIFICATION" },
+      }),
+      prisma.tournament.count({
+        where: {
+          status: {
+            in: ["PUBLISHED", "REGISTRATION_OPEN", "ONGOING"],
+          },
+        },
+      }),
+      prisma.match.count({
+        where: {
+          status: {
+            in: ["SCHEDULED", "ROOM_OPEN", "ONGOING"],
+          },
+        },
+      }),
+      prisma.payment.aggregate({
+        where: { status: "APPROVED" },
+        _sum: { amountPaise: true },
+      }),
+    ]);
+
+  const totalVerifiedPaise = verifiedRevenue._sum.amountPaise || 0;
 
   return (
     <div className="space-y-6">
@@ -62,7 +94,9 @@ export default async function AdminDashboardPage() {
             <CreditCard className="h-4 w-4 text-amber-400" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-black text-amber-300">0</div>
+            <div className="text-2xl font-black text-amber-300">
+              {pendingApprovals}
+            </div>
             <p className="text-[11px] text-slate-500 mt-1">
               Payments awaiting review
             </p>
@@ -77,7 +111,9 @@ export default async function AdminDashboardPage() {
             <Trophy className="h-4 w-4 text-skyfall-400" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-black text-white">0</div>
+            <div className="text-2xl font-black text-white">
+              {activeTournaments}
+            </div>
             <p className="text-[11px] text-slate-500 mt-1">
               Live or open for registration
             </p>
@@ -87,12 +123,14 @@ export default async function AdminDashboardPage() {
         <Card className="border-slate-800 bg-slate-900/80">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-xs font-medium text-slate-400">
-              Live / Today Matches
+              Live / Scheduled Matches
             </CardTitle>
             <Swords className="h-4 w-4 text-skyfall-400" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-black text-white">0</div>
+            <div className="text-2xl font-black text-white">
+              {scheduledMatches}
+            </div>
             <p className="text-[11px] text-slate-500 mt-1">
               Rooms to be distributed
             </p>
@@ -107,7 +145,9 @@ export default async function AdminDashboardPage() {
             <TrendingUp className="h-4 w-4 text-emerald-400" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-black text-white">₹0</div>
+            <div className="text-2xl font-black text-white">
+              {formatPaiseToINR(totalVerifiedPaise, { showFree: false })}
+            </div>
             <p className="text-[11px] text-slate-500 mt-1">
               Confirmed collections
             </p>

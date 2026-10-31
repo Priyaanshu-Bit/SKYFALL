@@ -13,8 +13,8 @@
 | Project                     | SKYFALL                                             |
 | Development Status          | In Progress                                         |
 | Current Phase               | Phase 6: Admin Operational Workbench & Verification |
-| Current Task                | Task 6.2: Admin Tournament Creation Engine          |
-| Completed Development Tasks | 13                                                  |
+| Current Task                | Task 6.3: Admin Match Room Operations & Bracket     |
+| Completed Development Tasks | 14                                                  |
 | Blocked Tasks               | 0                                                   |
 | Last Updated                | 31-10-2026                                          |
 
@@ -41,6 +41,7 @@ Record all successfully implemented and tested tasks here.
 | TASK-5.4 | Manual Payment Workflow (FamPay QR & UTR Submission)                                          | 31-10-2026      | PASS        |
 | TASK-5.5 | Player Dashboard Registration History & Live Status Tracking                                  | 31-10-2026      | PASS        |
 | TASK-6.1 | Admin Payment Verification Queue & Screenshot Review Modal                                    | 31-10-2026      | PASS        |
+| TASK-6.2 | Admin Tournament Creation Engine (Multi-Step Form & Prize Allocation)                         | 31-10-2026      | PASS        |
 
 Rules:
 
@@ -51,44 +52,33 @@ Rules:
 
 ## 3. Current Task
 
-**Task ID:** TASK-6.2  
-**Task Name:** Admin Tournament Creation Engine (Multi-Step Form & Prize Allocation)  
-**Status:** IN_PROGRESS  
+**Task ID:** TASK-6.3  
+**Task Name:** Admin Match Room Operations & Bracket Distribution  
+**Status:** NOT_STARTED  
 
 ### Task Description
 
-Construct the dedicated admin tournament creation workflow (`/admin/tournaments/new`) according to `ui-context.md` (Section 5.2) and `features.md` (Section 3.1):
-- Multi-step/section tournament creation form:
-  - **Basic Info:** Title, game title (Free Fire India), format (Battle Royale / Clash Squad), team size (SOLO, DUO, SQUAD), banner URL, description/rules.
-  - **Schedule & Registration Window:** Start date/time, registration start, registration deadline.
-  - **Capacity & Entry Fee:** Max team capacity, entry fee in ₹ INR (converted to paise integer in DB), banner image.
-  - **Prize Pool & Allocation Breakdown:** Total prize pool (₹ INR), automated/configurable place allocations (1st Place, 2nd Place, 3rd Place, Top Fragger).
-- Validation via Zod schema:
-  - Registration start < registration close < tournament start date.
-  - Total allocated prizes cannot exceed tournament prize pool.
-  - Team capacity must be an even integer $\ge 2$.
-  - Entry fee $\ge 0$.
-- Server action `createTournamentAction`:
-  - Enforce `requireAdmin()`.
-  - Atomic transaction creating `Tournament` and associated `PrizePool` records.
-  - Redirect to admin tournaments list or newly created tournament dashboard.
+Construct the match room management workbench (`/admin/tournaments/[id]/rooms` and `/admin/matches`) according to `ui-context.md` (Section 5.6) and `features.md` (Section 6.1):
+- Match generation for confirmed tournament squads (single-elimination knockout brackets or group match rooms).
+- Custom Free Fire Room ID and Password entry console with schedule times.
+- Real-time room credential disclosure to confirmed squad captains upon admin release.
+- Match status management: `SCHEDULED`, `ROOM_OPEN`, `ONGOING`, `COMPLETED`, `CANCELLED`.
 
 ### Completed Work
 
-- Phase 5 complete. TASK-6.1 complete with clean typecheck, lint, and build. User approved TASK-6.2.
+- TASK-6.2 is 100% complete. Admin tournament creation with multi-step wizard, financial margin calculation, prize pool allocation checks, and tournament workbench page tested and passing.
 
 ### Remaining Work
 
-- Implement `src/schemas/tournament.schema.ts` for tournament creation validation with rupees-to-paise transformation and prize allocation sum checks.
-- Implement `src/services/admin-tournament.service.ts` for tournament creation and listing.
-- Implement `src/features/admin/CreateTournamentForm.tsx` (multi-step form with live prize distribution calculations).
-- Implement `/admin/tournaments/new/page.tsx` and update `/admin/tournaments/page.tsx`.
+- Plan TASK-6.3 and obtain user approval.
+- Implement match room service and server actions.
+- Implement bracket generation and room credential management components.
 - Run typecheck, lint, and build tests.
 - Commit and push to GitHub.
 
 ### Files Created or Modified
 
-- To be updated upon implementation.
+- To be determined upon implementation.
 
 ### Questions Regarding Current Task
 
@@ -100,11 +90,11 @@ None.
 
 ## 4. Next Task
 
-**Task ID:** TASK-6.3  
-**Task Name:** Admin Match Room Operations & Bracket Distribution
+**Task ID:** TASK-6.4  
+**Task Name:** Admin Match Result Reporting, Standings & Verification
 
 Describe the next task that should be undertaken after the current task is completed and verified:
-Construct the match room management console (`/admin/tournaments/[id]/rooms`), allowing admins to generate match rounds, assign verified teams into lobby rooms/groups, input custom Free Fire room ID and password, and automatically distribute credentials to confirmed squad captains.
+Construct the match score entry and result publishing interface (`/admin/tournaments/[id]/results`), allowing room coordinators to record team placements, kill points, verify scoreboard screenshots, advance winning squads in knockout brackets, and compute final tournament standings.
 
 Do not begin this task while the current task remains incomplete.
 
@@ -145,6 +135,7 @@ Record the actual tests performed for the current task.
 | TEST-15 | Manual Payment Workflow (FamPay QR & UTR) Check  | Clean compilation        | Passed: typecheck, lint, build (λ)  | PASS        |
 | TEST-16 | Player Dashboard Registrations & Payments Check  | Clean compilation        | Passed: typecheck, lint, build (λ)  | PASS        |
 | TEST-17 | Admin Payment Verification Queue & Modal Check   | Clean compilation        | Passed: typecheck, lint, build (ƒ)  | PASS        |
+| TEST-18 | Admin Tournament Creation & Prize Allocation     | Clean compilation        | Passed: typecheck, lint, build (ƒ)  | PASS        |
 
 Testing rules:
 
@@ -208,6 +199,7 @@ Maintain a concise chronological record of significant development activities.
 | 31-10-2026 | TASK-5.4 | Manual Payment Workflow (FamPay QR & UTR Submission)            | Completed   |
 | 31-10-2026 | TASK-5.5 | Player Dashboard Registration History & Live Status Tracking    | Completed   |
 | 31-10-2026 | TASK-6.1 | Admin Payment Verification Queue & Screenshot Review Modal      | Completed   |
+| 31-10-2026 | TASK-6.2 | Admin Tournament Creation Engine & Prize Allocation Breakdown   | Completed   |
 
 ## 10. Mandatory Task Workflow
 
