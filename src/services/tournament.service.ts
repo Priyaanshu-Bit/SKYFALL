@@ -19,6 +19,25 @@ export interface TournamentListItem extends Tournament {
   isFull: boolean;
 }
 
+export interface TournamentDetail extends Tournament {
+  gameMode: GameMode;
+  prizes: PrizeDistribution[];
+  registrations: {
+    id: string;
+    registrationStatus: RegistrationStatus;
+    registeredAt: Date;
+    team: {
+      id: string;
+      name: string;
+      captainId: string;
+    };
+  }[];
+  totalPrizePoolPaise: number;
+  registeredCount: number;
+  availableSlots: number;
+  isFull: boolean;
+}
+
 export interface TournamentFilterOptions {
   status?: string;
   gameModeId?: string;
@@ -120,4 +139,62 @@ export async function getActiveGameModes(): Promise<GameMode[]> {
     where: { isActive: true },
     orderBy: { name: "asc" },
   });
+}
+
+/**
+ * Fetches complete details of a tournament by ID, including game mode,
+ * prize distribution rules, and confirmed team registrations.
+ */
+export async function getTournamentById(
+  id: string
+): Promise<TournamentDetail | null> {
+  const tournament = await prisma.tournament.findUnique({
+    where: { id },
+    include: {
+      gameMode: true,
+      prizes: {
+        orderBy: { position: "asc" },
+      },
+      registrations: {
+        where: {
+          registrationStatus: {
+            in: [
+              RegistrationStatus.CONFIRMED,
+              RegistrationStatus.PAYMENT_SUBMITTED,
+            ],
+          },
+        },
+        include: {
+          team: {
+            select: {
+              id: true,
+              name: true,
+              captainId: true,
+            },
+          },
+        },
+        orderBy: { registeredAt: "asc" },
+      },
+    },
+  });
+
+  if (!tournament) {
+    return null;
+  }
+
+  const totalPrizePoolPaise = tournament.prizes.reduce(
+    (sum, p) => sum + p.prizeAmountPaise,
+    0
+  );
+  const registeredCount = tournament.registrations.length;
+  const availableSlots = Math.max(0, tournament.teamCapacity - registeredCount);
+  const isFull = registeredCount >= tournament.teamCapacity;
+
+  return {
+    ...tournament,
+    totalPrizePoolPaise,
+    registeredCount,
+    availableSlots,
+    isFull,
+  };
 }

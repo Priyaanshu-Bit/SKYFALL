@@ -13,8 +13,8 @@
 | Project                     | SKYFALL                                             |
 | Development Status          | In Progress                                         |
 | Current Phase               | Phase 5: Tournament Browsing & Registration Engine  |
-| Current Task                | Task 5.2: Tournament Details Page & Rules Display    |
-| Completed Development Tasks | 8                                                   |
+| Current Task                | Task 5.3: Tournament Registration Workflow & Team Selection |
+| Completed Development Tasks | 9                                                   |
 | Blocked Tasks               | 0                                                   |
 | Last Updated                | 31-10-2026                                          |
 
@@ -36,6 +36,7 @@ Record all successfully implemented and tested tasks here.
 | TASK-4.3 | Player Dashboard Layout Shell & Mobile Bottom Navigation                                      | 31-10-2026      | PASS        |
 | TASK-4.4 | Admin Dashboard Layout Shell & Navigation                                                     | 31-10-2026      | PASS        |
 | TASK-5.1 | Tournament Listing Page & Public Discovery                                                    | 31-10-2026      | PASS        |
+| TASK-5.2 | Tournament Details Page & Rules Display                                                       | 31-10-2026      | PASS        |
 
 Rules:
 
@@ -46,32 +47,32 @@ Rules:
 
 ## 3. Current Task
 
-**Task ID:** TASK-5.2  
-**Task Name:** Tournament Details Page & Rules Display  
+**Task ID:** TASK-5.3  
+**Task Name:** Tournament Registration Workflow & Team Selection  
 **Status:** NOT_STARTED  
 
 ### Task Description
 
-Construct the comprehensive tournament details page (`/tournaments/[id]`) according to `ui-context.md` (Section 3.4) and `features.md` (Section 3.3):
-- Header hero banner with tournament name, status badge, game mode, and format.
-- Tabbed or sectioned layout:
-  - *Overview & Schedule*: Tournament date, time, match format, check-in instructions.
-  - *Prize Breakdown*: Distribution table (Winner, Runner-up, 3rd Place) with rupee amounts formatted from paise.
-  - *Rules & Code of Conduct*: Fair play policies, device restrictions (no emulators), room entry conditions.
-  - *Registered Teams & Slots*: Real-time list of registered squads and remaining available slots.
-- Sticky or prominent Registration Action Widget:
-  - Dynamic CTA button reflecting status: "Register Team" (open), "Registration Closed", "Slots Full", or "Live Match Room".
+Construct the complete team tournament registration flow (`/tournaments/[id]/register`) according to `ui-context.md` (Section 3.5) and `features.md` (Section 3.4):
+- Server-side authentication check (`requireAuth()`) and registration window validation.
+- Captain squad selection or instant squad roster builder:
+  - Validates squad size against tournament game mode (e.g. 4 players for Clash Squad).
+  - Validates player in-game Free Fire UIDs.
+  - Ensures neither the team nor any player is already registered in this tournament.
+- Slot capacity check with race condition prevention.
+- Creates `Registration` record with `PENDING_PAYMENT` status.
+- Redirects to payment step (`/tournaments/[id]/payment?registrationId=...`).
 
 ### Completed Work
 
-- Primitives and tournament querying service ready.
+- Tournament query service and details page ready.
 
 ### Remaining Work
 
-- Plan TASK-5.2 and obtain user approval.
-- Implement tournament detail data fetching service (`getTournamentByIdOrSlug`).
-- Implement tournament detail view components.
-- Implement `/tournaments/[id]/page.tsx`.
+- Plan TASK-5.3 and obtain user approval.
+- Implement registration service / actions with transaction validation.
+- Implement registration form component with squad selection and UID verification.
+- Implement `/tournaments/[id]/register/page.tsx`.
 - Run typecheck, lint, and build tests.
 - Commit and push to GitHub.
 
@@ -89,11 +90,11 @@ None.
 
 ## 4. Next Task
 
-**Task ID:** TASK-5.3  
-**Task Name:** Tournament Registration Workflow & Team Selection
+**Task ID:** TASK-5.4  
+**Task Name:** Manual Payment Workflow (FamPay QR & UTR Submission)
 
 Describe the next task that should be undertaken after the current task is completed and verified:
-Construct the multi-step tournament registration flow (`/tournaments/[id]/register`), validating player authentication, squad roster completeness according to the tournament's game mode (e.g. 4 verified players with Free Fire UIDs for Clash Squad), and team captain authorization.
+Construct the FamPay UPI QR code payment submission workflow (`/tournaments/[id]/payment`), allowing the captain to view the organizer's active FamPay QR, copy UPI ID, and submit the 12-digit transaction UTR reference with screenshot upload for admin verification.
 
 Do not begin this task while the current task remains incomplete.
 
@@ -129,6 +130,7 @@ Record the actual tests performed for the current task.
 | TEST-10 | Player Shell & Bottom Navigation Build & Check   | Clean compilation        | Passed: typecheck, lint, build (λ)  | PASS        |
 | TEST-11 | Admin Shell & Operational Navigation Check      | Clean compilation        | Passed: typecheck, lint, build (λ)  | PASS        |
 | TEST-12 | Tournament Listing & Discovery Build & Check    | Clean compilation        | Passed: typecheck, lint, build (λ)  | PASS        |
+| TEST-13 | Tournament Details Page, Rules & Action Card    | Clean compilation        | Passed: typecheck, lint, build (λ)  | PASS        |
 
 Testing rules:
 
@@ -187,6 +189,7 @@ Maintain a concise chronological record of significant development activities.
 | 31-10-2026 | TASK-4.3 | Player Dashboard Layout Shell & Mobile Bottom Navigation        | Completed   |
 | 31-10-2026 | TASK-4.4 | Admin Dashboard Layout Shell & Operational Navigation           | Completed   |
 | 31-10-2026 | TASK-5.1 | Tournament Listing Page & Public Discovery                      | Completed   |
+| 31-10-2026 | TASK-5.2 | Tournament Details Page & Rules Display                         | Completed   |
 
 ## 10. Mandatory Task Workflow
 
