@@ -6,8 +6,12 @@ import {
   createTournament,
   updateTournamentStatus,
 } from "@/services/admin-tournament.service";
+import {
+  generateKnockoutMatches,
+  updateMatchRoom,
+} from "@/services/admin-match.service";
 import type { CreateTournamentInput } from "@/schemas/tournament.schema";
-import type { TournamentStatus } from "@prisma/client";
+import type { TournamentStatus, MatchStatus } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 
 export async function approvePaymentAction(paymentId: string) {
@@ -43,6 +47,35 @@ export async function updateTournamentStatusAction(
   if (res.success) {
     revalidatePath("/admin/tournaments");
     revalidatePath("/tournaments");
+    revalidatePath("/admin");
+  }
+  return res;
+}
+
+export async function generateKnockoutMatchesAction(tournamentId: string) {
+  await requireAdmin();
+  const res = await generateKnockoutMatches(tournamentId);
+  if (res.success) {
+    revalidatePath(`/admin/tournaments/${tournamentId}/rooms`);
+    revalidatePath("/admin/matches");
+    revalidatePath("/admin");
+    revalidatePath("/dashboard/tournaments");
+  }
+  return res;
+}
+
+export async function updateMatchRoomAction(input: {
+  matchId: string;
+  roomId?: string;
+  roomPassword?: string;
+  scheduledAt?: string;
+  status: MatchStatus;
+}) {
+  await requireAdmin();
+  const res = await updateMatchRoom(input);
+  if (res.success) {
+    revalidatePath("/admin/matches");
+    revalidatePath("/dashboard/tournaments");
     revalidatePath("/admin");
   }
   return res;

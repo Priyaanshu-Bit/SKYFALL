@@ -9,6 +9,7 @@ import {
   ExternalLink,
   Users,
   Calendar,
+  Swords,
 } from "lucide-react";
 import {
   Card,
@@ -306,6 +307,17 @@ export function AdminTournamentList({
                   {/* Actions Column */}
                   <div className="flex flex-wrap md:flex-col items-center md:items-end gap-2 shrink-0 border-t md:border-t-0 border-slate-800 pt-3 md:pt-0">
                     <div className="flex items-center gap-2">
+                      <Link href={`/admin/tournaments/${t.id}/rooms`}>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="gap-1.5 border-amber-500/40 text-amber-400 hover:bg-amber-950/40 text-xs"
+                        >
+                          <Swords className="h-3.5 w-3.5" />
+                          <span>Rooms</span>
+                        </Button>
+                      </Link>
+
                       <Link href={`/tournaments/${t.id}`} target="_blank">
                         <Button
                           variant="outline"

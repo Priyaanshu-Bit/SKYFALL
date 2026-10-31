@@ -13,8 +13,8 @@
 | Project                     | SKYFALL                                             |
 | Development Status          | In Progress                                         |
 | Current Phase               | Phase 6: Admin Operational Workbench & Verification |
-| Current Task                | Task 6.3: Admin Match Room Operations & Bracket     |
-| Completed Development Tasks | 14                                                  |
+| Current Task                | Task 6.4: Admin Match Result Reporting & Standings  |
+| Completed Development Tasks | 15                                                  |
 | Blocked Tasks               | 0                                                   |
 | Last Updated                | 31-10-2026                                          |
 
@@ -42,6 +42,7 @@ Record all successfully implemented and tested tasks here.
 | TASK-5.5 | Player Dashboard Registration History & Live Status Tracking                                  | 31-10-2026      | PASS        |
 | TASK-6.1 | Admin Payment Verification Queue & Screenshot Review Modal                                    | 31-10-2026      | PASS        |
 | TASK-6.2 | Admin Tournament Creation Engine (Multi-Step Form & Prize Allocation)                         | 31-10-2026      | PASS        |
+| TASK-6.3 | Admin Match Room Operations & Bracket Distribution                                            | 31-10-2026      | PASS        |
 
 Rules:
 
@@ -52,27 +53,31 @@ Rules:
 
 ## 3. Current Task
 
-**Task ID:** TASK-6.3  
-**Task Name:** Admin Match Room Operations & Bracket Distribution  
+**Task ID:** TASK-6.4  
+**Task Name:** Admin Match Result Reporting, Standings & Verification  
 **Status:** NOT_STARTED  
 
 ### Task Description
 
-Construct the match room management workbench (`/admin/tournaments/[id]/rooms` and `/admin/matches`) according to `ui-context.md` (Section 5.6) and `features.md` (Section 6.1):
-- Match generation for confirmed tournament squads (single-elimination knockout brackets or group match rooms).
-- Custom Free Fire Room ID and Password entry console with schedule times.
-- Real-time room credential disclosure to confirmed squad captains upon admin release.
-- Match status management: `SCHEDULED`, `ROOM_OPEN`, `ONGOING`, `COMPLETED`, `CANCELLED`.
+Construct the match score entry and result publishing interface (`/admin/tournaments/[id]/results` and `/admin/results`) according to `ui-context.md` (Section 5.11) and `features.md` (Section 5.9):
+- Match score & round winner recording:
+  - Select winning squad for completed match.
+  - Record team scores (rounds won, kill count, MVP Free Fire UID).
+  - Upload/attach final in-game scoreboard screenshot verification.
+- Automatic knockout bracket progression:
+  - Advancing winning team into subsequent tournament round slots (e.g. Winner of Quarterfinal Match 1 moves into Semifinal Match 1 Team A slot).
+  - Updating tournament standings and declaring Champion & Runner-up.
+- Captain notification dispatch upon verified result publication.
 
 ### Completed Work
 
-- TASK-6.2 is 100% complete. Admin tournament creation with multi-step wizard, financial margin calculation, prize pool allocation checks, and tournament workbench page tested and passing.
+- TASK-6.3 is 100% complete. Admin match room operations, single-elimination bracket generation with mathematical bye handling, room credential disclosure modal, and captain notification on room open fully implemented and tested.
 
 ### Remaining Work
 
-- Plan TASK-6.3 and obtain user approval.
-- Implement match room service and server actions.
-- Implement bracket generation and room credential management components.
+- Plan TASK-6.4 and obtain user approval.
+- Implement match result reporting service and winner advancement transaction logic.
+- Implement match result entry dialog and tournament standings UI.
 - Run typecheck, lint, and build tests.
 - Commit and push to GitHub.
 
@@ -90,11 +95,11 @@ None.
 
 ## 4. Next Task
 
-**Task ID:** TASK-6.4  
-**Task Name:** Admin Match Result Reporting, Standings & Verification
+**Task ID:** TASK-6.5  
+**Task Name:** Financial Ledger & Prize Payout Fulfilment Engine
 
 Describe the next task that should be undertaken after the current task is completed and verified:
-Construct the match score entry and result publishing interface (`/admin/tournaments/[id]/results`), allowing room coordinators to record team placements, kill points, verify scoreboard screenshots, advance winning squads in knockout brackets, and compute final tournament standings.
+Construct the financial administration workbench (`/admin/financials`), tracking verified entry fee collections, refund obligations, and prize distribution fulfilment status (`CONFIGURED`, `ASSIGNED`, `PAID`) with transaction reference tracking for winning squads.
 
 Do not begin this task while the current task remains incomplete.
 
@@ -136,6 +141,7 @@ Record the actual tests performed for the current task.
 | TEST-16 | Player Dashboard Registrations & Payments Check  | Clean compilation        | Passed: typecheck, lint, build (λ)  | PASS        |
 | TEST-17 | Admin Payment Verification Queue & Modal Check   | Clean compilation        | Passed: typecheck, lint, build (ƒ)  | PASS        |
 | TEST-18 | Admin Tournament Creation & Prize Allocation     | Clean compilation        | Passed: typecheck, lint, build (ƒ)  | PASS        |
+| TEST-19 | Admin Match Room Operations & Bracket Generation | Clean compilation        | Passed: typecheck, lint, build (ƒ)  | PASS        |
 
 Testing rules:
 
@@ -200,6 +206,7 @@ Maintain a concise chronological record of significant development activities.
 | 31-10-2026 | TASK-5.5 | Player Dashboard Registration History & Live Status Tracking    | Completed   |
 | 31-10-2026 | TASK-6.1 | Admin Payment Verification Queue & Screenshot Review Modal      | Completed   |
 | 31-10-2026 | TASK-6.2 | Admin Tournament Creation Engine & Prize Allocation Breakdown   | Completed   |
+| 31-10-2026 | TASK-6.3 | Admin Match Room Operations & Single-Elimination Bracket Gen    | Completed   |
 
 ## 10. Mandatory Task Workflow
 
