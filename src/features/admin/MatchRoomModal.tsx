@@ -17,6 +17,7 @@ import { Select } from "@/components/ui/select";
 import { updateMatchRoomAction } from "@/features/admin/actions";
 import type { MatchWithTeams } from "@/services/admin-match.service";
 import type { MatchStatus, Match } from "@prisma/client";
+import { playRoomOpenTone, playSuccessTone, playErrorTone } from "@/lib/sound";
 
 interface MatchRoomModalProps {
   match: MatchWithTeams | null;
@@ -67,6 +68,7 @@ export function MatchRoomModal({
 
   const handleCopy = (text: string, field: string) => {
     navigator.clipboard.writeText(text);
+    playRoomOpenTone();
     setCopiedField(field);
     setTimeout(() => setCopiedField(null), 2000);
   };
@@ -87,12 +89,15 @@ export function MatchRoomModal({
       });
 
       if (!res.success || !res.match) {
+        playErrorTone();
         setError(res.error || "Failed to update match room.");
       } else {
+        playSuccessTone();
         onSuccess(res.match);
         onClose();
       }
     } catch (err: unknown) {
+      playErrorTone();
       setError(err instanceof Error ? err.message : "An unexpected error occurred.");
     } finally {
       setIsSubmitting(false);

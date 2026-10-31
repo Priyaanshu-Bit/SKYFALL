@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { UserButton } from "@clerk/nextjs";
 import { Flame, Trophy, ArrowUpRight } from "lucide-react";
 import { NotificationBell } from "@/components/layout/NotificationBell";
+import { AudioToggle } from "@/components/ui/AudioToggle";
 
 const TITLE_MAP: Record<string, string> = {
   "/dashboard": "Dashboard Overview",
@@ -80,6 +81,9 @@ export function PlayerHeader() {
           <span>Tournaments</span>
           <ArrowUpRight className="h-3 w-3 text-slate-500" />
         </Link>
+
+        {/* Audio Toggle */}
+        <AudioToggle />
 
         {/* Interactive In-App Notification Center */}
         <NotificationBell viewAllHref="/dashboard/notifications" />

@@ -22,6 +22,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { formatPaiseToINR, formatDateIST } from "@/lib/utils";
 import type { PlayerRegistrationItem } from "@/services/player-dashboard.service";
+import { playRoomOpenTone, playClickTone } from "@/lib/sound";
 
 interface PlayerRegistrationCardProps {
   registration: PlayerRegistrationItem;
@@ -43,6 +44,7 @@ export function PlayerRegistrationCard({
 
   const handleCopy = (text: string, type: "room" | "pass") => {
     navigator.clipboard.writeText(text);
+    playRoomOpenTone();
     if (type === "room") {
       setCopiedRoomId(true);
       setTimeout(() => setCopiedRoomId(false), 2000);
@@ -233,7 +235,10 @@ export function PlayerRegistrationCard({
         <div className="border-t border-slate-800/80 pt-3">
           <button
             type="button"
-            onClick={() => setShowRoster(!showRoster)}
+            onClick={() => {
+              playClickTone();
+              setShowRoster(!showRoster);
+            }}
             className="flex items-center justify-between w-full text-xs font-semibold text-slate-400 hover:text-white transition-colors"
           >
             <span>View Squad Roster ({team.members.length} Players)</span>

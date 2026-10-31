@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { formatPaiseToINR, cn } from "@/lib/utils";
 import { submitTournamentRegistration } from "./actions";
+import { playSuccessTone, playErrorTone, playClickTone } from "@/lib/sound";
 import type { TournamentDetail } from "@/services/tournament.service";
 import type { PlayerRosterMember } from "@/schemas/registration.schema";
 
@@ -99,10 +100,13 @@ export function TournamentRegistrationForm({
       });
 
       if (!res.success) {
+        playErrorTone();
         setErrorMessage(res.error || "Failed to register squad.");
         setIsSubmitting(false);
         return;
       }
+
+      playSuccessTone();
 
       // If entry fee applies, redirect to payment step; otherwise direct to player tournaments
       if (tournament.entryFeePaise > 0) {
@@ -113,6 +117,7 @@ export function TournamentRegistrationForm({
         router.push(`/dashboard/tournaments`);
       }
     } catch {
+      playErrorTone();
       setErrorMessage("A network or server error occurred. Please try again.");
       setIsSubmitting(false);
     }
@@ -130,6 +135,7 @@ export function TournamentRegistrationForm({
           <button
             type="button"
             onClick={() => {
+              playClickTone();
               setMode("EXISTING");
               setErrorMessage(null);
             }}
@@ -147,6 +153,7 @@ export function TournamentRegistrationForm({
           <button
             type="button"
             onClick={() => {
+              playClickTone();
               setMode("NEW");
               setErrorMessage(null);
             }}

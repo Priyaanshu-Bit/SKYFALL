@@ -17,6 +17,7 @@ import {
   markAllNotificationsAsReadAction,
 } from "@/features/notifications/actions";
 import type { Notification, NotificationType } from "@prisma/client";
+import { playClickTone } from "@/lib/sound";
 
 interface NotificationBellProps {
   initialNotifications?: Notification[];
@@ -77,6 +78,7 @@ export function NotificationBell({
   };
 
   const handleMarkAllRead = async () => {
+    playClickTone();
     // Optimistic UI update
     setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
     setUnreadCount(0);
@@ -104,7 +106,10 @@ export function NotificationBell({
       {/* Bell Button */}
       <button
         type="button"
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => {
+          playClickTone();
+          setIsOpen(!isOpen);
+        }}
         className={`relative flex h-9 w-9 items-center justify-center rounded-lg border border-slate-800 bg-slate-900/60 text-slate-300 transition-colors hover:bg-slate-800 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-skyfall-400 ${className}`}
         aria-label="In-App Notifications"
         aria-expanded={isOpen}

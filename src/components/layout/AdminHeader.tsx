@@ -14,6 +14,7 @@ import {
 import { cn } from "@/lib/utils";
 import { ADMIN_NAV_ITEMS } from "./AdminSidebar";
 import { NotificationBell } from "@/components/layout/NotificationBell";
+import { AudioToggle } from "@/components/ui/AudioToggle";
 
 const ADMIN_TITLE_MAP: Record<string, string> = {
   "/admin": "Operations Overview",
@@ -122,6 +123,8 @@ export function AdminHeader() {
             <span>Live Site</span>
             <ExternalLink className="h-3 w-3 text-slate-400" />
           </Link>
+
+          <AudioToggle />
 
           <NotificationBell
             viewAllHref="/admin/notifications"

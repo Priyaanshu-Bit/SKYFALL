@@ -15,6 +15,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { fulfillPrizePayoutAction } from "@/features/admin/actions";
 import { formatPaiseToINR } from "@/lib/utils";
 import type { PrizeDistributionItem } from "@/services/admin-financial.service";
+import { playTrophyTone, playErrorTone } from "@/lib/sound";
 
 interface FulfillPayoutModalProps {
   prize: PrizeDistributionItem | null;
@@ -47,6 +48,7 @@ export function FulfillPayoutModal({
   const handleSubmit = async () => {
     const ref = transactionReference.trim();
     if (!ref || ref.length < 4) {
+      playErrorTone();
       setError("Please provide a valid UPI / FamPay transaction reference.");
       return;
     }
@@ -61,15 +63,18 @@ export function FulfillPayoutModal({
       });
 
       if (!res.success) {
+        playErrorTone();
         setError(
           ("error" in res ? res.error : undefined) ||
             "Failed to record prize payout."
         );
       } else {
+        playTrophyTone();
         onSuccess();
         onClose();
       }
     } catch (err: unknown) {
+      playErrorTone();
       setError(
         err instanceof Error ? err.message : "An unexpected error occurred."
       );

@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { recordMatchResultAction } from "@/features/admin/actions";
 import type { MatchWithResultData } from "@/services/admin-result.service";
+import { playTrophyTone, playSuccessTone, playErrorTone } from "@/lib/sound";
 
 interface RecordMatchResultModalProps {
   match: MatchWithResultData | null;
@@ -85,15 +86,22 @@ export function RecordMatchResultModal({
       });
 
       if (!res.success) {
+        playErrorTone();
         setError(
           ("error" in res ? res.error : undefined) ||
             "Failed to record match result."
         );
       } else {
+        if (isGrandFinal) {
+          playTrophyTone();
+        } else {
+          playSuccessTone();
+        }
         onSuccess();
         onClose();
       }
     } catch (err: unknown) {
+      playErrorTone();
       setError(err instanceof Error ? err.message : "An unexpected error occurred.");
     } finally {
       setIsSubmitting(false);

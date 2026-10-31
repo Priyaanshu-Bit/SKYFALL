@@ -24,6 +24,7 @@ import { Modal } from "@/components/ui/modal";
 import { EmptyState } from "@/components/ui/empty-state";
 import { formatPaiseToINR, formatDateTimeIST, cn } from "@/lib/utils";
 import { approvePaymentAction, rejectPaymentAction } from "./actions";
+import { playSuccessTone, playErrorTone, playClickTone } from "@/lib/sound";
 import type {
   AdminPaymentQueueItem,
   PaymentQueueStats,
@@ -61,6 +62,7 @@ export function PaymentVerificationQueue({
 
   const handleCopyUtr = (utr: string) => {
     navigator.clipboard.writeText(utr);
+    playClickTone();
     setCopiedUtr(utr);
     setTimeout(() => setCopiedUtr(null), 2000);
   };
@@ -87,11 +89,13 @@ export function PaymentVerificationQueue({
     try {
       const res = await approvePaymentAction(selectedPayment.id);
       if (!res.success) {
+        playErrorTone();
         setActionError(res.error || "Failed to approve payment.");
         setIsProcessing(false);
         return;
       }
 
+      playSuccessTone();
       // Update local item
       setPayments((prev) =>
         prev.map((p) =>
@@ -104,6 +108,7 @@ export function PaymentVerificationQueue({
       handleCloseModal();
       router.refresh();
     } catch {
+      playErrorTone();
       setActionError("A network error occurred. Please try again.");
       setIsProcessing(false);
     }
@@ -113,6 +118,7 @@ export function PaymentVerificationQueue({
     if (!selectedPayment) return;
     const reason = rejectionReason.trim();
     if (!reason) {
+      playErrorTone();
       setActionError("Please provide an administrative rejection explanation.");
       return;
     }
@@ -123,11 +129,13 @@ export function PaymentVerificationQueue({
     try {
       const res = await rejectPaymentAction(selectedPayment.id, reason);
       if (!res.success) {
+        playErrorTone();
         setActionError(res.error || "Failed to reject payment.");
         setIsProcessing(false);
         return;
       }
 
+      playErrorTone(); // Rejection alert tone
       // Update local item
       setPayments((prev) =>
         prev.map((p) =>
@@ -145,6 +153,7 @@ export function PaymentVerificationQueue({
       handleCloseModal();
       router.refresh();
     } catch {
+      playErrorTone();
       setActionError("A network error occurred. Please try again.");
       setIsProcessing(false);
     }

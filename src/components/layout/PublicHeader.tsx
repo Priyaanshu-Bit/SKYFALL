@@ -7,6 +7,7 @@ import { useAuth, UserButton } from "@clerk/nextjs";
 import { Flame, Menu, X, Trophy } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { AudioToggle } from "@/components/ui/AudioToggle";
 
 interface NavItem {
   name: string;
@@ -101,6 +102,7 @@ export function PublicHeader() {
 
         {/* Desktop Auth Actions */}
         <div className="hidden md:flex items-center gap-3 min-w-[140px] justify-end">
+          <AudioToggle />
           {isLoaded && isSignedIn ? (
             <>
               <Link
@@ -131,6 +133,7 @@ export function PublicHeader() {
 
         {/* Mobile Hamburger Toggle */}
         <div className="flex md:hidden items-center gap-2">
+          <AudioToggle />
           {isLoaded && isSignedIn && (
             <UserButton
               appearance={{

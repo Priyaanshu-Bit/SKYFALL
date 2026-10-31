@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { formatPaiseToINR, cn } from "@/lib/utils";
 import { submitPaymentProof } from "./actions";
+import { playSuccessTone, playErrorTone, playClickTone } from "@/lib/sound";
 
 interface PaymentSubmissionFormProps {
   registrationId: string;
@@ -55,6 +56,7 @@ export function PaymentSubmissionForm({
 
   const handleCopyUpi = () => {
     navigator.clipboard.writeText(fampaySettings.upiId);
+    playClickTone();
     setCopiedUpi(true);
     setTimeout(() => setCopiedUpi(false), 2000);
   };
@@ -64,17 +66,20 @@ export function PaymentSubmissionForm({
     if (!file) return;
 
     if (!file.type.startsWith("image/")) {
+      playErrorTone();
       setErrorMessage("Please select a valid image file (PNG, JPG, WEBP).");
       return;
     }
 
     if (file.size > 5 * 1024 * 1024) {
+      playErrorTone();
       setErrorMessage("Screenshot file size must be less than 5MB.");
       return;
     }
 
     setScreenshotFileName(file.name);
     setErrorMessage(null);
+    playClickTone();
 
     const reader = new FileReader();
     reader.onload = () => {
@@ -84,6 +89,7 @@ export function PaymentSubmissionForm({
   };
 
   const handleRemoveScreenshot = () => {
+    playClickTone();
     setScreenshotDataUrl(null);
     setScreenshotFileName(null);
   };
@@ -94,11 +100,13 @@ export function PaymentSubmissionForm({
 
     const cleanUtr = utr.trim();
     if (!/^\d{12}$/.test(cleanUtr)) {
+      playErrorTone();
       setErrorMessage("UPI Reference (UTR) must be exactly 12 numeric digits.");
       return;
     }
 
     if (!screenshotDataUrl) {
+      playErrorTone();
       setErrorMessage("Please upload a screenshot of your payment receipt.");
       return;
     }
@@ -113,13 +121,16 @@ export function PaymentSubmissionForm({
       });
 
       if (!res.success) {
+        playErrorTone();
         setErrorMessage(res.error || "Failed to submit payment proof.");
         setIsSubmitting(false);
         return;
       }
 
+      playSuccessTone();
       setIsSubmittedSuccess(true);
     } catch {
+      playErrorTone();
       setErrorMessage("A network or server error occurred. Please try again.");
       setIsSubmitting(false);
     }
