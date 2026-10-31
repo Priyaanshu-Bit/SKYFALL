@@ -10,6 +10,7 @@ import {
   generateKnockoutMatches,
   updateMatchRoom,
 } from "@/services/admin-match.service";
+import { recordMatchResult } from "@/services/admin-result.service";
 import type { CreateTournamentInput } from "@/schemas/tournament.schema";
 import type { TournamentStatus, MatchStatus } from "@prisma/client";
 import { revalidatePath } from "next/cache";
@@ -75,6 +76,31 @@ export async function updateMatchRoomAction(input: {
   const res = await updateMatchRoom(input);
   if (res.success) {
     revalidatePath("/admin/matches");
+    revalidatePath("/dashboard/tournaments");
+    revalidatePath("/admin");
+  }
+  return res;
+}
+
+export async function recordMatchResultAction(input: {
+  matchId: string;
+  winnerTeamId: string;
+  teamAScore?: number;
+  teamBScore?: number;
+  kills?: number;
+  scoreboardProofUrl?: string;
+}) {
+  const admin = await requireAdmin();
+  const res = await recordMatchResult({
+    ...input,
+    adminUserId: admin.id,
+  });
+  if (res.success) {
+    revalidatePath("/admin/results");
+    revalidatePath("/admin/matches");
+    revalidatePath("/admin/tournaments");
+    revalidatePath("/admin/financials");
+    revalidatePath("/tournaments");
     revalidatePath("/dashboard/tournaments");
     revalidatePath("/admin");
   }

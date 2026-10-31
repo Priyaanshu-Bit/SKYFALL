@@ -13,8 +13,8 @@
 | Project                     | SKYFALL                                             |
 | Development Status          | In Progress                                         |
 | Current Phase               | Phase 6: Admin Operational Workbench & Verification |
-| Current Task                | Task 6.4: Admin Match Result Reporting & Standings  |
-| Completed Development Tasks | 15                                                  |
+| Current Task                | Task 6.5: Financial Ledger & Prize Payout Fulfilment|
+| Completed Development Tasks | 16                                                  |
 | Blocked Tasks               | 0                                                   |
 | Last Updated                | 31-10-2026                                          |
 
@@ -43,6 +43,7 @@ Record all successfully implemented and tested tasks here.
 | TASK-6.1 | Admin Payment Verification Queue & Screenshot Review Modal                                    | 31-10-2026      | PASS        |
 | TASK-6.2 | Admin Tournament Creation Engine (Multi-Step Form & Prize Allocation)                         | 31-10-2026      | PASS        |
 | TASK-6.3 | Admin Match Room Operations & Bracket Distribution                                            | 31-10-2026      | PASS        |
+| TASK-6.4 | Admin Match Result Reporting, Standings & Bracket Progression                                 | 31-10-2026      | PASS        |
 
 Rules:
 
@@ -53,31 +54,31 @@ Rules:
 
 ## 3. Current Task
 
-**Task ID:** TASK-6.4  
-**Task Name:** Admin Match Result Reporting, Standings & Verification  
+**Task ID:** TASK-6.5  
+**Task Name:** Financial Ledger & Prize Payout Fulfilment Engine  
 **Status:** NOT_STARTED  
 
 ### Task Description
 
-Construct the match score entry and result publishing interface (`/admin/tournaments/[id]/results` and `/admin/results`) according to `ui-context.md` (Section 5.11) and `features.md` (Section 5.9):
-- Match score & round winner recording:
-  - Select winning squad for completed match.
-  - Record team scores (rounds won, kill count, MVP Free Fire UID).
-  - Upload/attach final in-game scoreboard screenshot verification.
-- Automatic knockout bracket progression:
-  - Advancing winning team into subsequent tournament round slots (e.g. Winner of Quarterfinal Match 1 moves into Semifinal Match 1 Team A slot).
-  - Updating tournament standings and declaring Champion & Runner-up.
-- Captain notification dispatch upon verified result publication.
+Construct the financial management workbench (`/admin/financials`) according to `ui-context.md` (Section 5.12) and `features.md` (Section 5.11):
+- Comprehensive financial ledger:
+  - Total verified entry fee collections vs pending/unverified payments.
+  - Total committed prize pool obligations vs actual recorded payouts.
+  - Net platform organizer margin calculation (`Collected Fees - Prize Obligations - Refunds`).
+- Prize fulfillment tracking:
+  - View winning squads assigned from completed matches.
+  - Record prize payout fulfillment: transition status (`ASSIGNED` $\rightarrow$ `PAID`), input transaction reference (FamPay/UPI UTR), and record payment timestamp.
+  - Dispatch prize payment confirmation notification to winning squad captain.
 
 ### Completed Work
 
-- TASK-6.3 is 100% complete. Admin match room operations, single-elimination bracket generation with mathematical bye handling, room credential disclosure modal, and captain notification on room open fully implemented and tested.
+- TASK-6.4 is 100% complete. Admin match result reporting, scoreboard statistics entry, automated knockout bracket winner advancement, and tournament champion declaration verified and tested.
 
 ### Remaining Work
 
-- Plan TASK-6.4 and obtain user approval.
-- Implement match result reporting service and winner advancement transaction logic.
-- Implement match result entry dialog and tournament standings UI.
+- Plan TASK-6.5 and obtain user approval.
+- Implement financial ledger service and prize payout server actions.
+- Implement financial analytics and payout recording components.
 - Run typecheck, lint, and build tests.
 - Commit and push to GitHub.
 
@@ -95,11 +96,11 @@ None.
 
 ## 4. Next Task
 
-**Task ID:** TASK-6.5  
-**Task Name:** Financial Ledger & Prize Payout Fulfilment Engine
+**Task ID:** TASK-7.1  
+**Task Name:** Automated Notifications & Real-Time Sync Engine
 
 Describe the next task that should be undertaken after the current task is completed and verified:
-Construct the financial administration workbench (`/admin/financials`), tracking verified entry fee collections, refund obligations, and prize distribution fulfilment status (`CONFIGURED`, `ASSIGNED`, `PAID`) with transaction reference tracking for winning squads.
+Construct the in-app player notification center and scheduled tasks (Trigger.dev / cron) for automated match reminders, registration deadline warnings, and room credential release alerts.
 
 Do not begin this task while the current task remains incomplete.
 
@@ -142,6 +143,7 @@ Record the actual tests performed for the current task.
 | TEST-17 | Admin Payment Verification Queue & Modal Check   | Clean compilation        | Passed: typecheck, lint, build (ƒ)  | PASS        |
 | TEST-18 | Admin Tournament Creation & Prize Allocation     | Clean compilation        | Passed: typecheck, lint, build (ƒ)  | PASS        |
 | TEST-19 | Admin Match Room Operations & Bracket Generation | Clean compilation        | Passed: typecheck, lint, build (ƒ)  | PASS        |
+| TEST-20 | Match Result Reporting, Standings & Progression  | Clean compilation        | Passed: typecheck, lint, build (ƒ)  | PASS        |
 
 Testing rules:
 
@@ -207,6 +209,7 @@ Maintain a concise chronological record of significant development activities.
 | 31-10-2026 | TASK-6.1 | Admin Payment Verification Queue & Screenshot Review Modal      | Completed   |
 | 31-10-2026 | TASK-6.2 | Admin Tournament Creation Engine & Prize Allocation Breakdown   | Completed   |
 | 31-10-2026 | TASK-6.3 | Admin Match Room Operations & Single-Elimination Bracket Gen    | Completed   |
+| 31-10-2026 | TASK-6.4 | Admin Match Result Reporting, Standings & Bracket Progression   | Completed   |
 
 ## 10. Mandatory Task Workflow
 
