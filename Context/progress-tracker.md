@@ -13,8 +13,8 @@
 | Project                     | SKYFALL                                             |
 | Development Status          | In Progress                                         |
 | Current Phase               | Phase 4: Shared UI Primitives & Layout Shells       |
-| Current Task                | Task 4.1 Completed; Ready for Task 4.2              |
-| Completed Development Tasks | 4                                                   |
+| Current Task                | Task 4.2 Completed; Ready for Task 4.3              |
+| Completed Development Tasks | 5                                                   |
 | Blocked Tasks               | 0                                                   |
 | Last Updated                | 31-10-2026                                          |
 
@@ -32,6 +32,7 @@ Record all successfully implemented and tested tasks here.
 | TASK-2.1 | Database Modeling, Prisma Schema, Client Singleton & Seed Configuration                       | 31-10-2026      | PASS        |
 | TASK-3.1 | Clerk Authentication, Root `proxy.ts`, Role-Based Authorization & User Profile Integration    | 31-10-2026      | PASS        |
 | TASK-4.1 | Shared UI Component Primitives & Base Esports Design System                                   | 31-10-2026      | PASS        |
+| TASK-4.2 | Public Website Layout Shell & Responsive Navigation System                                    | 31-10-2026      | PASS        |
 
 Rules:
 
@@ -42,49 +43,48 @@ Rules:
 
 ## 3. Current Task
 
-**Task ID:** TASK-4.1  
-**Task Name:** Shared UI Component Primitives & Base Design System  
+**Task ID:** TASK-4.2  
+**Task Name:** Public Website Layout Shell & Navigation  
 **Status:** COMPLETED  
 
 ### Task Description
 
-Construct the reusable UI component library in `src/components/ui/` per `ui-context.md`: `Button`, `Input`, `Textarea`, `Select`, `Card`, `Modal`, `ConfirmationDialog`, `Badge` (with `TournamentStatusBadge`, `PaymentStatusBadge`, and `RegistrationStatusBadge`), `LoadingIndicator`, `EmptyState`, and `ErrorState` with responsive mobile-first styling and esports dark aesthetic.
+Build the reusable public website layout and navigation system according to `ui-context.md`, `architecture.md`, `code-standards.md`, and `features.md`:
+- `PublicHeader.tsx`: Official `SKYFALL` branding, responsive desktop navbar, mobile drawer with hamburger toggle, active link indicators, auth state integration (`Dashboard` / `<UserButton />` vs `Sign In`).
+- `PublicFooter.tsx`: Branding, platform links, tournament information, trademark disclaimer, copyright.
+- `src/app/(public)/layout.tsx`: Isolates the public shell layout without affecting player or admin layouts.
+- Relocate root `src/app/page.tsx` into `src/app/(public)/page.tsx` for clean layout inheritance.
 
 ### Completed Work
 
-- Created `src/components/ui/button.tsx` with CVA variants (`default` flame orange, `secondary`, `outline`, `destructive`, `ghost`, `link`), sizes (`sm`, `default`, `lg`, `icon`), touch target min-height >= 44px, and loading spinner state.
-- Created `src/components/ui/input.tsx` with touch-friendly dimensions, label support, error state, hint text, and accessibility attributes (`aria-invalid`, `aria-describedby`).
-- Created `src/components/ui/textarea.tsx` supporting multi-line rules and descriptions with accessible labels and errors.
-- Created `src/components/ui/select.tsx` dropdown component with custom icon and accessible options.
-- Created `src/components/ui/card.tsx` layout primitives (`Card`, `CardHeader`, `CardTitle`, `CardDescription`, `CardContent`, `CardFooter`).
-- Created `src/components/ui/badge.tsx` with generic badges and domain-specific status badges:
-  - `TournamentStatusBadge`: Draft, Upcoming, Registration Open, Registration Closed, Live/Ongoing, Completed, Cancelled.
-  - `PaymentStatusBadge`: Under Review, Verified/Approved, Payment Rejected, Awaiting Payment, Refunded.
-  - `RegistrationStatusBadge`: Confirmed Slot, Payment Submitted, Pending Payment, Rejected, Cancelled, Refunded.
-- Created `src/components/ui/modal.tsx` with backdrop blur, keyboard ESC dismissal, body scroll lock, and touch dismiss.
-- Created `src/components/ui/confirmation-dialog.tsx` for destructive/critical admin operations (cancelling tournaments, rejecting payments, publishing results).
-- Created `src/components/ui/loading-indicator.tsx`, `empty-state.tsx`, and `error-state.tsx`.
-- Created barrel export `src/components/ui/index.ts`.
+- Created `src/components/layout/PublicHeader.tsx`:
+  - `SKYFALL` brand mark with esports flame gradient.
+  - Desktop nav links (Home, Tournaments, Results, Leaderboards, About, Contact) with dynamic active link indicators based on `usePathname()`.
+  - Client-side auth integration via Clerk `useAuth()` rendering "Dashboard" + `<UserButton />` when signed in, or "Sign In" button when signed out.
+  - Mobile hamburger toggle with accessible `aria-expanded` and `aria-label`.
+  - Mobile slide-down navigation drawer with touch targets >= 48px and automatic close on route change or ESC key press.
+- Created `src/components/layout/PublicFooter.tsx`:
+  - `SKYFALL` esports branding and platform mission statement.
+  - Navigation columns: Platform links, Tournament rules & anti-cheat notice, Organizer support (Email & UPI support via FamPay).
+  - Free Fire trademark disclaimer and copyright statement (`© 2026 SKYFALL. All rights reserved.`).
+- Created `src/app/(public)/layout.tsx`:
+  - Encloses public routes with `PublicHeader`, dynamic `<main className="flex-1">`, and `PublicFooter`.
+- Relocated baseline `src/app/page.tsx` to `src/app/(public)/page.tsx` ensuring the homepage route `/` naturally inherits the public shell layout.
+- Staged newly added `Context/features.md`.
 - Verified: `npm run typecheck` (0 errors), `npm run lint` (0 warnings/errors), `npm run build` (passed cleanly).
 
 ### Remaining Work
 
-- None for Task 4.1. Ready for Task 4.2.
+- None for Task 4.2. Ready for Task 4.3.
 
 ### Files Created or Modified
 
-- `src/components/ui/button.tsx`
-- `src/components/ui/input.tsx`
-- `src/components/ui/textarea.tsx`
-- `src/components/ui/select.tsx`
-- `src/components/ui/card.tsx`
-- `src/components/ui/badge.tsx`
-- `src/components/ui/modal.tsx`
-- `src/components/ui/confirmation-dialog.tsx`
-- `src/components/ui/loading-indicator.tsx`
-- `src/components/ui/empty-state.tsx`
-- `src/components/ui/error-state.tsx`
-- `src/components/ui/index.ts`
+- `src/components/layout/PublicHeader.tsx`
+- `src/components/layout/PublicFooter.tsx`
+- `src/app/(public)/layout.tsx`
+- `src/app/(public)/page.tsx`
+- `src/app/page.tsx` (removed/relocated)
+- `Context/features.md`
 - `Context/progress-tracker.md`
 
 ### Questions Regarding Current Task
@@ -97,11 +97,11 @@ None.
 
 ## 4. Next Task
 
-**Task ID:** TASK-4.2  
-**Task Name:** Public Website Layout Shell & Navigation
+**Task ID:** TASK-4.3  
+**Task Name:** Player Dashboard Layout Shell & Mobile Bottom Navigation
 
 Describe the next task that should be undertaken after the current task is completed and verified:
-Construct the public layout shell (`src/components/layout/PublicHeader.tsx`, `PublicFooter.tsx`, and `src/app/(public)/layout.tsx`) with mobile responsive navigation, desktop navbar, branding (`SKYFALL`), and active route indicators.
+Construct the player dashboard shell (`src/app/(player)/layout.tsx`, `PlayerSidebar.tsx`, `PlayerMobileNav.tsx` with mobile bottom navigation, and dashboard top bar with user profile/notifications).
 
 Do not begin this task while the current task remains incomplete.
 
@@ -133,6 +133,7 @@ Record the actual tests performed for the current task.
 | TEST-06 | Prisma Client Generation (`prisma generate`)     | Type-safe client gen     | Generated to node_modules in 80ms   | PASS   |
 | TEST-07 | Clerk Auth & proxy.ts Route Resolution           | Clean compilation        | Compiled dynamic routes cleanly     | PASS   |
 | TEST-08 | UI Primitives Compilation & Accessibility        | 0 type or lint errors    | All 11 primitives passed cleanly    | PASS   |
+| TEST-09 | Public Shell & Navigation Typecheck & Build      | Clean compilation        | Static and dynamic routes compiled  | PASS   |
 
 Testing rules:
 
@@ -187,6 +188,7 @@ Maintain a concise chronological record of significant development activities.
 | 31-10-2026 | TASK-2.1 | Database Schema, Prisma 6.4.1 Client Singleton & Seed Config    | Completed   |
 | 31-10-2026 | TASK-3.1 | Clerk Auth, Root proxy.ts, Server Auth Helpers & User Sync      | Completed   |
 | 31-10-2026 | TASK-4.1 | Shared UI Component Primitives & Base Esports Design System     | Completed   |
+| 31-10-2026 | TASK-4.2 | Public Website Layout Shell & Responsive Navigation System      | Completed   |
 
 ## 10. Mandatory Task Workflow
 
