@@ -13,8 +13,8 @@
 | Project                     | SKYFALL                                             |
 | Development Status          | In Progress                                         |
 | Current Phase               | Phase 5: Tournament Browsing & Registration Engine  |
-| Current Task                | Task 5.1: Tournament Listing Page & Public Discovery |
-| Completed Development Tasks | 7                                                   |
+| Current Task                | Task 5.2: Tournament Details Page & Rules Display    |
+| Completed Development Tasks | 8                                                   |
 | Blocked Tasks               | 0                                                   |
 | Last Updated                | 31-10-2026                                          |
 
@@ -35,6 +35,7 @@ Record all successfully implemented and tested tasks here.
 | TASK-4.2 | Public Website Layout Shell & Responsive Navigation System                                    | 31-10-2026      | PASS        |
 | TASK-4.3 | Player Dashboard Layout Shell & Mobile Bottom Navigation                                      | 31-10-2026      | PASS        |
 | TASK-4.4 | Admin Dashboard Layout Shell & Navigation                                                     | 31-10-2026      | PASS        |
+| TASK-5.1 | Tournament Listing Page & Public Discovery                                                    | 31-10-2026      | PASS        |
 
 Rules:
 
@@ -45,30 +46,32 @@ Rules:
 
 ## 3. Current Task
 
-**Task ID:** TASK-5.1  
-**Task Name:** Tournament Listing Page & Public Discovery  
+**Task ID:** TASK-5.2  
+**Task Name:** Tournament Details Page & Rules Display  
 **Status:** NOT_STARTED  
 
 ### Task Description
 
-Construct the public tournament browsing and discovery page (`/tournaments`) according to `ui-context.md` (Section 3.2) and `features.md` (Section 2):
-- Search input by tournament name.
-- Filter chips/tabs by status: All, Open for Registration, Ongoing, Completed.
-- Filter by game mode: All, Clash Squad (4v4), Battle Royale Solo, Battle Royale Squad.
-- Responsive tournament cards showing banner, title, game mode badge, format, entry fee (₹ or Free), prize pool, team slots (e.g. 12/48 teams filled with progress bar), date/time, and direct "Register Now" / "View Details" action.
-- Empty state with clear filters reset button.
-- Pagination or infinite scrolling.
+Construct the comprehensive tournament details page (`/tournaments/[id]`) according to `ui-context.md` (Section 3.4) and `features.md` (Section 3.3):
+- Header hero banner with tournament name, status badge, game mode, and format.
+- Tabbed or sectioned layout:
+  - *Overview & Schedule*: Tournament date, time, match format, check-in instructions.
+  - *Prize Breakdown*: Distribution table (Winner, Runner-up, 3rd Place) with rupee amounts formatted from paise.
+  - *Rules & Code of Conduct*: Fair play policies, device restrictions (no emulators), room entry conditions.
+  - *Registered Teams & Slots*: Real-time list of registered squads and remaining available slots.
+- Sticky or prominent Registration Action Widget:
+  - Dynamic CTA button reflecting status: "Register Team" (open), "Registration Closed", "Slots Full", or "Live Match Room".
 
 ### Completed Work
 
-- Layout shell and primitives ready.
+- Primitives and tournament querying service ready.
 
 ### Remaining Work
 
-- Plan TASK-5.1 and obtain user approval.
-- Implement tournament querying service / server data fetching.
-- Implement filter components and interactive search state.
-- Implement responsive tournament card grid and empty state.
+- Plan TASK-5.2 and obtain user approval.
+- Implement tournament detail data fetching service (`getTournamentByIdOrSlug`).
+- Implement tournament detail view components.
+- Implement `/tournaments/[id]/page.tsx`.
 - Run typecheck, lint, and build tests.
 - Commit and push to GitHub.
 
@@ -86,11 +89,11 @@ None.
 
 ## 4. Next Task
 
-**Task ID:** TASK-5.2  
-**Task Name:** Tournament Details Page & Rules Display
+**Task ID:** TASK-5.3  
+**Task Name:** Tournament Registration Workflow & Team Selection
 
 Describe the next task that should be undertaken after the current task is completed and verified:
-Construct the rich public tournament details page (`/tournaments/[id]`) with banner, prize breakdown table, format & schedule, rules & instructions tabs, registered teams list, and dynamic registration CTA button based on user auth & registration status.
+Construct the multi-step tournament registration flow (`/tournaments/[id]/register`), validating player authentication, squad roster completeness according to the tournament's game mode (e.g. 4 verified players with Free Fire UIDs for Clash Squad), and team captain authorization.
 
 Do not begin this task while the current task remains incomplete.
 
@@ -125,6 +128,7 @@ Record the actual tests performed for the current task.
 | TEST-09 | Public Shell & Navigation Typecheck & Build      | Clean compilation        | Static and dynamic routes compiled  | PASS        |
 | TEST-10 | Player Shell & Bottom Navigation Build & Check   | Clean compilation        | Passed: typecheck, lint, build (λ)  | PASS        |
 | TEST-11 | Admin Shell & Operational Navigation Check      | Clean compilation        | Passed: typecheck, lint, build (λ)  | PASS        |
+| TEST-12 | Tournament Listing & Discovery Build & Check    | Clean compilation        | Passed: typecheck, lint, build (λ)  | PASS        |
 
 Testing rules:
 
@@ -182,6 +186,7 @@ Maintain a concise chronological record of significant development activities.
 | 31-10-2026 | TASK-4.2 | Public Website Layout Shell & Responsive Navigation System      | Completed   |
 | 31-10-2026 | TASK-4.3 | Player Dashboard Layout Shell & Mobile Bottom Navigation        | Completed   |
 | 31-10-2026 | TASK-4.4 | Admin Dashboard Layout Shell & Operational Navigation           | Completed   |
+| 31-10-2026 | TASK-5.1 | Tournament Listing Page & Public Discovery                      | Completed   |
 
 ## 10. Mandatory Task Workflow
 
