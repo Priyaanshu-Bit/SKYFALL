@@ -12,9 +12,9 @@
 | --------------------------- | --------------------------------------------------- |
 | Project                     | SKYFALL                                             |
 | Development Status          | In Progress                                         |
-| Current Phase               | Phase 1: Foundation, Tooling & Design Tokens        |
-| Current Task                | Task 1.1 Completed; Ready for Task 2.1              |
-| Completed Development Tasks | 1                                                   |
+| Current Phase               | Phase 2: Database Modeling & Prisma Configuration   |
+| Current Task                | Task 2.1 Completed; Ready for Task 3.1              |
+| Completed Development Tasks | 2                                                   |
 | Blocked Tasks               | 0                                                   |
 | Last Updated                | 31-10-2026                                          |
 
@@ -29,6 +29,7 @@ Record all successfully implemented and tested tasks here.
 | Task ID  | Task Name                                                                                     | Completion Date | Test Status |
 | -------- | --------------------------------------------------------------------------------------------- | --------------- | ----------- |
 | TASK-1.1 | Next.js 15, React 19, TypeScript & Tailwind Application Setup with Modular Architecture       | 31-10-2026      | PASS        |
+| TASK-2.1 | Database Modeling, Prisma Schema, Client Singleton & Seed Configuration                       | 31-10-2026      | PASS        |
 
 Rules:
 
@@ -39,48 +40,44 @@ Rules:
 
 ## 3. Current Task
 
-**Task ID:** TASK-1.1  
-**Task Name:** Next.js 15, React 19, TypeScript & Tailwind Application Setup with Modular Architecture  
+**Task ID:** TASK-2.1  
+**Task Name:** Database Schema & Prisma Configuration  
 **Status:** COMPLETED  
 
 ### Task Description
 
-Scaffold the root Next.js App Router application with React 19, TypeScript, and Tailwind CSS. Configure strict TypeScript rules, ESLint, path aliases (`@/*`), establish the modular folder structure specified in `code-standards.md`, and generate `.env.example`.
+Install Prisma ORM, configure PostgreSQL connection, create the complete domain data schema in `prisma/schema.prisma` (`User`, `Tournament`, `GameMode`, `Team`, `TeamMember`, `Registration`, `Payment`, `PrizeDistribution`, `Match`, `MatchResult`, `Notification`, `PlatformSetting`) supporting configurable capacities, even team rules, paise integer monetary values, and seed data for initial 4-team testing. Establish Prisma client singleton in `src/lib/prisma.ts`.
 
 ### Completed Work
 
-- Dedicated Git repository initialized on `main` branch with remote origin `https://github.com/Priyaanshu-Bit/SKYFALL.git`.
-- `.gitignore` configured to safely ignore `node_modules`, `.next`, build artifacts, and secrets.
-- Baseline documentation committed and pushed.
-- `package.json` created with Next.js 15.5.28, React 19, TypeScript, Tailwind CSS, Lucide Icons, clsx, tailwind-merge.
-- Strict `tsconfig.json` configured with `@/*` path mapping.
-- `next.config.ts`, `tailwind.config.ts`, `postcss.config.mjs`, and `eslint.config.mjs` configured.
-- Feature-driven directory structure scaffolded with domain folders (`src/app/`, `src/components/`, `src/features/`, `src/services/`, `src/lib/`, `src/schemas/`, `src/hooks/`, `src/types/`, `src/config/`, `prisma/`, `trigger/`).
-- `src/lib/utils.ts` created with `cn()` utility.
-- `src/app/layout.tsx`, `src/app/page.tsx`, `src/app/globals.css` created with responsive esports styling variables.
-- Comprehensive `.env.example` created.
-- Automated testing verified: `tsc --noEmit` passed (0 errors), `npm run lint` passed (0 warnings/errors), `npm run build` passed (clean static generation).
+- Locked and installed stable Prisma ORM 6.4.1 (`@prisma/client` and `prisma`) and `tsx` for seed execution.
+- Created complete relational data schema in `prisma/schema.prisma`:
+  - `User`: Clerk identity mapping, role enum (`PLAYER`, `ADMIN`), email, Free Fire UID, profile info.
+  - `GameMode`: Configurable modes (`Clash Squad`, `Battle Royale`), dynamic player counts (min/max players per team).
+  - `Tournament`: Slugs, status enum, format (`KNOCKOUT`, etc.), configurable team capacity (even number >= 2), paise integer monetary values (`entryFeePaise`), schedule locking boolean, dates and start times.
+  - `Team` & `TeamMember`: Team roster, member Free Fire UIDs, position index, captain relations.
+  - `Registration`: Concurrency-safe unique constraint `[tournamentId, teamId]` preventing duplicate entries, registration status lifecycle.
+  - `Payment`: Manual FamPay QR workflow fields, unique `transactionReference` preventing duplicate submissions, private storage screenshot URL, `verifiedById`, `verifiedAt`, rejection reason.
+  - `PrizeDistribution`: Position index, paise integer prizes (`prizeAmountPaise`), recipient team relation, payout lifecycle (`CONFIGURED`, `ASSIGNED`, `PAID`).
+  - `Match` & `MatchResult`: Round tracking, sequence number, participating teams, private room credentials, verified score structure, audit trail.
+  - `Notification`: In-app notification center with read/unread tracking.
+  - `PlatformSetting`: Key-value configuration for FamPay QR image URL and organizer branding.
+- Created `src/lib/prisma.ts` global singleton preventing connection pool exhaustion in Next.js HMR.
+- Created `prisma/seed.ts` seeding supported game modes (Clash Squad, Battle Royale) and platform defaults.
+- Schema validated (`prisma validate` passed), client generated (`prisma generate` passed).
+- TypeScript check (`tsc --noEmit`), ESLint (`npm run lint`), and Next.js production build (`npm run build`) all verified and passed cleanly with 0 errors.
 
 ### Remaining Work
 
-- None for Task 1.1. Ready for Task 2.1.
+- None for Task 2.1. Ready for Task 3.1.
 
 ### Files Created or Modified
 
 - `package.json`
 - `package-lock.json`
-- `tsconfig.json`
-- `next.config.ts`
-- `tailwind.config.ts`
-- `postcss.config.mjs`
-- `eslint.config.mjs`
-- `.env.example`
-- `.gitignore`
-- `src/lib/utils.ts`
-- `src/app/globals.css`
-- `src/app/layout.tsx`
-- `src/app/page.tsx`
-- Domain directories (`src/app/(public)/`, `src/app/(player)/`, `src/app/admin/`, `src/app/api/`, `src/components/ui/`, `src/components/layout/`, `src/components/shared/`, `src/features/*/`, `src/services/`, `src/schemas/`, `src/hooks/`, `src/types/`, `src/config/`, `prisma/`, `trigger/`)
+- `prisma/schema.prisma`
+- `prisma/seed.ts`
+- `src/lib/prisma.ts`
 - `Context/progress-tracker.md`
 
 ### Questions Regarding Current Task
@@ -93,11 +90,11 @@ None.
 
 ## 4. Next Task
 
-**Task ID:** TASK-2.1  
-**Task Name:** Database Schema & Prisma Configuration
+**Task ID:** TASK-3.1  
+**Task Name:** Clerk Authentication & Role-Based Authorization Integration
 
 Describe the next task that should be undertaken after the current task is completed and verified:
-Initialize Prisma ORM, configure PostgreSQL connection, create the complete domain data schema (`User`, `Tournament`, `GameMode`, `Team`, `TeamMember`, `Registration`, `Payment`, `PrizeDistribution`, `Match`, `MatchResult`, `Notification`) supporting configurable capacities, even team rules, paise integer monetary values, and seed data for initial 4-team testing.
+Install `@clerk/nextjs`, configure Next.js middleware for route protection (protecting `/admin/*` and `/(player)/*`), set up server-side auth utility helpers (`getCurrentUser`, `requireAuth`, `requireAdmin`), and create webhook/sync service mapping Clerk identity to local PostgreSQL `User` record with role management.
 
 Do not begin this task while the current task remains incomplete.
 
@@ -125,6 +122,8 @@ Record the actual tests performed for the current task.
 | TEST-02 | TypeScript type check (`tsc --noEmit`)           | 0 errors                 | Passed cleanly with 0 errors        | PASS   |
 | TEST-03 | ESLint code quality check (`npm run lint`)       | 0 errors or warnings     | "No ESLint warnings or errors"      | PASS   |
 | TEST-04 | Next.js production build (`npm run build`)       | Clean compilation        | Static and dynamic routes compiled  | PASS   |
+| TEST-05 | Prisma Schema Validation (`prisma validate`)     | Valid schema             | "schema is valid" 🚀                | PASS   |
+| TEST-06 | Prisma Client Generation (`prisma generate`)     | Type-safe client gen     | Generated to node_modules in 80ms   | PASS   |
 
 Testing rules:
 
@@ -172,10 +171,11 @@ Do not repeatedly ask questions that have already been answered.
 
 Maintain a concise chronological record of significant development activities.
 
-| Date       | Task ID  | Update                                                          | Result     |
-| ---------- | -------- | --------------------------------------------------------------- | ---------- |
-| 31-10-2026 | —        | Initial project audit, documentation review & baseline git push | Completed  |
-| 31-10-2026 | TASK-1.1 | Next.js 15, React 19, TS, Tailwind CSS & modular architecture   | Completed  |
+| Date       | Task ID  | Update                                                          | Result      |
+| ---------- | -------- | --------------------------------------------------------------- | ----------- |
+| 31-10-2026 | —        | Initial project audit, documentation review & baseline git push | Completed   |
+| 31-10-2026 | TASK-1.1 | Next.js 15, React 19, TS, Tailwind CSS & modular architecture   | Completed   |
+| 31-10-2026 | TASK-2.1 | Database Schema, Prisma 6.4.1 Client Singleton & Seed Config    | Completed   |
 
 ## 10. Mandatory Task Workflow
 

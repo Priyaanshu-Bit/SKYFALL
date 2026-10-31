@@ -1,0 +1,341 @@
+// ==========================================
+// SKYFALL TOURNAMENT PLATFORM — PRISMA SCHEMA
+// ==========================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ------------------------------------------
+// Enums
+// ------------------------------------------
+
+enum Role {
+  PLAYER
+  ADMIN
+}
+
+enum TournamentFormat {
+  KNOCKOUT
+  LEAGUE
+  ROUND_ROBIN
+}
+
+enum TournamentStatus {
+  DRAFT
+  PUBLISHED
+  REGISTRATION_OPEN
+  REGISTRATION_CLOSED
+  ONGOING
+  COMPLETED
+  CANCELLED
+}
+
+enum RegistrationStatus {
+  PENDING_PAYMENT
+  PAYMENT_SUBMITTED
+  CONFIRMED
+  REJECTED
+  CANCELLED
+  REFUNDED
+}
+
+enum PaymentStatus {
+  AWAITING_PAYMENT
+  UNDER_VERIFICATION
+  APPROVED
+  REJECTED
+  REFUNDED
+}
+
+enum PayoutStatus {
+  CONFIGURED
+  ASSIGNED
+  PAID
+}
+
+enum MatchStatus {
+  SCHEDULED
+  ROOM_OPEN
+  ONGOING
+  COMPLETED
+  CANCELLED
+}
+
+enum NotificationType {
+  SYSTEM
+  REGISTRATION
+  PAYMENT
+  MATCH
+  TOURNAMENT
+  PRIZE
+}
+
+// ------------------------------------------
+// User & Authentication
+// ------------------------------------------
+
+model User {
+  id              String         @id @default(cuid())
+  clerkUserId     String         @unique
+  name            String?
+  email           String         @unique
+  phone           String?
+  freeFireUid     String?
+  role            Role           @default(PLAYER)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  // Relationships
+  teams           Team[]         @relation("TeamCaptain")
+  registrations   Registration[]
+  notifications   Notification[]
+  verifiedPayments Payment[]     @relation("VerifiedPayments")
+  verifiedResults MatchResult[]  @relation("VerifiedResults")
+
+  @@index([clerkUserId])
+  @@index([role])
+}
+
+// ------------------------------------------
+// Game Mode
+// ------------------------------------------
+
+model GameMode {
+  id              String         @id @default(cuid())
+  name            String         @unique // e.g. "Clash Squad", "Battle Royale"
+  game            String         @default("Free Fire India")
+  playersPerTeam  Int            // e.g. 4 for Clash Squad
+  minPlayers      Int            @default(4)
+  maxPlayers      Int            @default(4)
+  description     String?        @db.Text
+  rules           String?        @db.Text
+  isActive        Boolean        @default(true)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  tournaments     Tournament[]
+}
+
+// ------------------------------------------
+// Tournament
+// ------------------------------------------
+
+model Tournament {
+  id                  String             @id @default(cuid())
+  name                String
+  slug                String             @unique
+  description         String?            @db.Text
+  game                String             @default("Free Fire India")
+  gameModeId          String
+  gameMode            GameMode           @relation(fields: [gameModeId], references: [id])
+  tournamentFormat    TournamentFormat   @default(KNOCKOUT)
+  teamCapacity        Int                // Even number >= 2 (e.g. 4, 8, 12, 16)
+  entryFeePaise       Int                // Amount in paise (integer) e.g. 4000 = ₹40.00
+  currency            String             @default("INR")
+  status              TournamentStatus   @default(DRAFT)
+  isScheduleLocked    Boolean            @default(false)
+  rules               String?            @db.Text
+  bannerUrl           String?
+  livestreamUrl       String?
+  registrationOpenAt  DateTime
+  registrationCloseAt DateTime
+  tournamentDate      DateTime
+  startTime           String             // e.g. "18:00 IST"
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+
+  // Relationships
+  registrations       Registration[]
+  matches             Match[]
+  prizes              PrizeDistribution[]
+
+  @@index([status])
+  @@index([tournamentDate])
+}
+
+// ------------------------------------------
+// Team & Members
+// ------------------------------------------
+
+model Team {
+  id              String             @id @default(cuid())
+  name            String
+  captainId       String
+  captain         User               @relation("TeamCaptain", fields: [captainId], references: [id])
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+
+  members         TeamMember[]
+  registrations   Registration[]
+  matchesAsTeamA  Match[]            @relation("MatchTeamA")
+  matchesAsTeamB  Match[]            @relation("MatchTeamB")
+  matchesWon      Match[]            @relation("MatchWinner")
+  prizesWon       PrizeDistribution[]
+
+  @@index([captainId])
+}
+
+model TeamMember {
+  id              String         @id @default(cuid())
+  teamId          String
+  team            Team           @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  playerName      String
+  freeFireUid     String
+  position        Int            @default(1)
+  isCaptain       Boolean        @default(false)
+  createdAt       DateTime       @default(now())
+
+  @@index([teamId])
+  @@index([freeFireUid])
+}
+
+// ------------------------------------------
+// Registration
+// ------------------------------------------
+
+model Registration {
+  id                  String             @id @default(cuid())
+  tournamentId        String
+  tournament          Tournament         @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+  teamId              String
+  team                Team               @relation(fields: [teamId], references: [id])
+  registeredById      String
+  registeredBy        User               @relation(fields: [registeredById], references: [id])
+  registrationStatus  RegistrationStatus @default(PENDING_PAYMENT)
+  registeredAt        DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+
+  payment             Payment?
+
+  @@unique([tournamentId, teamId]) // A team cannot register twice for the same tournament
+  @@index([tournamentId, registrationStatus])
+}
+
+// ------------------------------------------
+// Manual Payment (FamPay QR)
+// ------------------------------------------
+
+model Payment {
+  id                    String         @id @default(cuid())
+  registrationId        String         @unique
+  registration          Registration   @relation(fields: [registrationId], references: [id], onDelete: Cascade)
+  amountPaise           Int            // In paise (integer) e.g. 4000 = ₹40.00
+  currency              String         @default("INR")
+  transactionReference  String         @unique // Protected against duplicate submission
+  screenshotUrl         String         // Private secure storage URL
+  status                PaymentStatus  @default(UNDER_VERIFICATION)
+  rejectionReason       String?
+  verifiedById          String?
+  verifiedBy            User?          @relation("VerifiedPayments", fields: [verifiedById], references: [id])
+  verifiedAt            DateTime?
+  createdAt             DateTime       @default(now())
+  updatedAt             DateTime       @updatedAt
+
+  @@index([status])
+  @@index([transactionReference])
+}
+
+// ------------------------------------------
+// Prize Distribution
+// ------------------------------------------
+
+model PrizeDistribution {
+  id                String         @id @default(cuid())
+  tournamentId      String
+  tournament        Tournament     @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+  position          Int            // 1 = Winner, 2 = Runner-up
+  title             String         @default("Winner")
+  prizeAmountPaise  Int            // In paise e.g. 12000 = ₹120.00
+  recipientTeamId   String?
+  recipientTeam     Team?          @relation(fields: [recipientTeamId], references: [id])
+  payoutStatus      PayoutStatus   @default(CONFIGURED)
+  paidAt            DateTime?
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+
+  @@unique([tournamentId, position])
+}
+
+// ------------------------------------------
+// Match & Brackets
+// ------------------------------------------
+
+model Match {
+  id              String         @id @default(cuid())
+  tournamentId    String
+  tournament      Tournament     @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+  round           Int            // 1 = Round 1 / Semifinals, 2 = Finals, etc.
+  roundName       String?        // e.g. "Semifinals", "Finals"
+  matchNumber     Int            // Sequence within round
+  teamAId         String?
+  teamA           Team?          @relation("MatchTeamA", fields: [teamAId], references: [id])
+  teamBId         String?
+  teamB           Team?          @relation("MatchTeamB", fields: [teamBId], references: [id])
+  scheduledAt     DateTime?
+  roomId          String?        // Private room credential
+  roomPassword    String?        // Private room credential
+  status          MatchStatus    @default(SCHEDULED)
+  winnerTeamId    String?
+  winnerTeam      Team?          @relation("MatchWinner", fields: [winnerTeamId], references: [id])
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  results         MatchResult[]
+
+  @@index([tournamentId, round])
+}
+
+model MatchResult {
+  id              String         @id @default(cuid())
+  matchId         String
+  match           Match          @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  winnerTeamId    String
+  teamAScore      Int?
+  teamBScore      Int?
+  resultData      String?        @db.Text // JSON metadata (kills, MVPs, rounds won)
+  submittedById   String
+  verifiedById    String?
+  verifiedBy      User?          @relation("VerifiedResults", fields: [verifiedById], references: [id])
+  verifiedAt      DateTime?
+  createdAt       DateTime       @default(now())
+
+  @@index([matchId])
+}
+
+// ------------------------------------------
+// Notifications
+// ------------------------------------------
+
+model Notification {
+  id              String           @id @default(cuid())
+  userId          String
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title           String
+  message         String           @db.Text
+  type            NotificationType @default(SYSTEM)
+  link            String?
+  isRead          Boolean          @default(false)
+  readAt          DateTime?
+  createdAt       DateTime         @default(now())
+
+  @@index([userId, isRead])
+}
+
+// ------------------------------------------
+// Platform Settings (Admin configurable)
+// ------------------------------------------
+
+model PlatformSetting {
+  id              String         @id @default(cuid())
+  key             String         @unique // e.g. "FAMPAY_QR_IMAGE_URL", "SUPPORT_WHATSAPP"
+  value           String         @db.Text
+  description     String?
+  updatedAt       DateTime       @updatedAt
+}
