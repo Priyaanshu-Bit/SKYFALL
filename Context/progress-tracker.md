@@ -12,9 +12,9 @@
 | --------------------------- | --------------------------------------------------- |
 | Project                     | SKYFALL                                             |
 | Development Status          | In Progress                                         |
-| Current Phase               | Phase 5: Tournament Browsing & Registration Engine  |
-| Current Task                | Task 5.5: Player Registration History & Live Status  |
-| Completed Development Tasks | 11                                                  |
+| Current Phase               | Phase 6: Admin Operational Workbench & Verification |
+| Current Task                | Task 6.1: Admin Payment Verification Queue & Modal  |
+| Completed Development Tasks | 12                                                  |
 | Blocked Tasks               | 0                                                   |
 | Last Updated                | 31-10-2026                                          |
 
@@ -39,6 +39,7 @@ Record all successfully implemented and tested tasks here.
 | TASK-5.2 | Tournament Details Page & Rules Display                                                       | 31-10-2026      | PASS        |
 | TASK-5.3 | Tournament Registration Workflow & Team Selection                                             | 31-10-2026      | PASS        |
 | TASK-5.4 | Manual Payment Workflow (FamPay QR & UTR Submission)                                          | 31-10-2026      | PASS        |
+| TASK-5.5 | Player Dashboard Registration History & Live Status Tracking                                  | 31-10-2026      | PASS        |
 
 Rules:
 
@@ -49,29 +50,30 @@ Rules:
 
 ## 3. Current Task
 
-**Task ID:** TASK-5.5  
-**Task Name:** Player Dashboard Registration History & Live Status Tracking  
+**Task ID:** TASK-6.1  
+**Task Name:** Admin Payment Verification Queue & Screenshot Review Modal  
 **Status:** NOT_STARTED  
 
 ### Task Description
 
-Construct the dedicated player dashboard tournament registration and payment tracking views (`/dashboard/tournaments` and `/dashboard/payments`) according to `ui-context.md` (Section 4.3 & 4.4) and `features.md` (Section 3.5 & 4.4):
-- Query and display all tournament registrations submitted by the authenticated player.
-- Live status badges: `PENDING_PAYMENT`, `PAYMENT_SUBMITTED`, `CONFIRMED`, `REJECTED`, `CANCELLED`.
-- Transparent feedback: Display admin notes and rejection reasons when payment is rejected with a 1-click re-submit CTA.
-- Detailed squad view: display roster players with Free Fire in-game UIDs.
-- Room credentials preview: displays "Room credentials unlock 15 minutes before match start" or live room ID/password when status is `CONFIRMED` and room is open.
+Construct the dedicated admin payment verification workbench (`/admin/payments`) according to `ui-context.md` (Section 5.5) and `features.md` (Section 5.3):
+- Query and filter submitted manual FamPay UPI payments: `UNDER_VERIFICATION`, `VERIFIED`, `REJECTED`.
+- Side-by-side or modal review: High-res screenshot viewer with pan/zoom, copyable UTR reference, team roster, and expected fee.
+- Verification actions:
+  - **Approve:** Transitions payment to `VERIFIED` and registration to `CONFIRMED`.
+  - **Reject:** Opens rejection dialog with customizable reason (e.g. "Invalid UTR", "Amount Mismatch", "Duplicate Receipt"), updates status to `REJECTED`, and unlocks the slot.
+- Automated notification dispatch to the squad captain.
 
 ### Completed Work
 
-- Registration and manual payment flow completed.
+- Phase 5 is 100% complete. Player payments and registration tracking live.
 
 ### Remaining Work
 
-- Plan TASK-5.5 and obtain user approval.
-- Implement player registrations and payments fetching service.
-- Implement registration card and status timeline components.
-- Implement `/dashboard/tournaments/page.tsx` and `/dashboard/payments/page.tsx`.
+- Plan TASK-6.1 and obtain user approval.
+- Implement admin payment verification service & server actions.
+- Implement verification queue table and screenshot review modal.
+- Implement `/admin/payments/page.tsx`.
 - Run typecheck, lint, and build tests.
 - Commit and push to GitHub.
 
@@ -89,11 +91,11 @@ None.
 
 ## 4. Next Task
 
-**Task ID:** TASK-6.1  
-**Task Name:** Admin Payment Verification Queue & Screenshot Review Modal
+**Task ID:** TASK-6.2  
+**Task Name:** Admin Tournament Creation Engine (Multi-Step Form & Prize Allocation)
 
 Describe the next task that should be undertaken after the current task is completed and verified:
-Construct the admin manual payment verification workbench (`/admin/payments`), featuring a side-by-side transaction review modal with high-res screenshot viewer, UTR copy button, bank statement matching status, and 1-click Approve / Reject with custom rejection reason dialog.
+Construct the multi-step tournament creation interface (`/admin/tournaments/new`), supporting game mode selection, team capacity, entry fee in rupees (converted to paise), prize distribution allocations, registration windows, and rules definition.
 
 Do not begin this task while the current task remains incomplete.
 
@@ -132,6 +134,7 @@ Record the actual tests performed for the current task.
 | TEST-13 | Tournament Details Page, Rules & Action Card    | Clean compilation        | Passed: typecheck, lint, build (λ)  | PASS        |
 | TEST-14 | Tournament Registration Workflow & Team Select   | Clean compilation        | Passed: typecheck, lint, build (λ)  | PASS        |
 | TEST-15 | Manual Payment Workflow (FamPay QR & UTR) Check  | Clean compilation        | Passed: typecheck, lint, build (λ)  | PASS        |
+| TEST-16 | Player Dashboard Registrations & Payments Check  | Clean compilation        | Passed: typecheck, lint, build (λ)  | PASS        |
 
 Testing rules:
 
@@ -193,6 +196,7 @@ Maintain a concise chronological record of significant development activities.
 | 31-10-2026 | TASK-5.2 | Tournament Details Page & Rules Display                         | Completed   |
 | 31-10-2026 | TASK-5.3 | Tournament Registration Workflow & Team Selection               | Completed   |
 | 31-10-2026 | TASK-5.4 | Manual Payment Workflow (FamPay QR & UTR Submission)            | Completed   |
+| 31-10-2026 | TASK-5.5 | Player Dashboard Registration History & Live Status Tracking    | Completed   |
 
 ## 10. Mandatory Task Workflow
 
