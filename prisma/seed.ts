@@ -53,10 +53,12 @@ async function main() {
 
   await prisma.platformSetting.upsert({
     where: { key: "FAMPAY_QR_IMAGE_URL" },
-    update: {},
+    update: {
+      value: "/images/fampay-qr.jpg",
+    },
     create: {
       key: "FAMPAY_QR_IMAGE_URL",
-      value: "/images/placeholder-fampay-qr.png",
+      value: "/images/fampay-qr.jpg",
       description: "Current active FamPay UPI QR code for manual payment collection.",
     },
   });

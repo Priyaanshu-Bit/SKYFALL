@@ -64,7 +64,7 @@ export async function getFamPaySettings() {
   return {
     qrImageUrl:
       settingsMap.get("FAMPAY_QR_IMAGE_URL") ||
-      "/images/placeholder-fampay-qr.png",
+      "/images/fampay-qr.jpg",
     upiId: settingsMap.get("FAMPAY_UPI_ID") || "skyfall.esports@fam",
     branding: settingsMap.get("ORGANIZER_BRANDING") || "SKYFALL",
   };

@@ -190,14 +190,15 @@ export function PaymentSubmissionForm({
 
         {/* QR Code Presentation Box */}
         <div className="flex flex-col items-center justify-center rounded-2xl border border-slate-800 bg-slate-950 p-6 space-y-4">
-          <div className="relative h-56 w-56 overflow-hidden rounded-xl border-2 border-slate-700 bg-white p-2 shadow-inner">
-            {fampaySettings.qrImageUrl && fampaySettings.qrImageUrl !== "/images/placeholder-fampay-qr.png" ? (
+          <div className="relative h-60 w-60 overflow-hidden rounded-2xl border-2 border-slate-700 bg-white p-2 shadow-2xl">
+            {fampaySettings.qrImageUrl ? (
               <Image
                 src={fampaySettings.qrImageUrl}
                 alt="FamPay UPI QR Code"
                 fill
                 unoptimized
-                className="object-contain p-2"
+                priority
+                className="object-contain p-1"
               />
             ) : (
               <div className="flex h-full w-full flex-col items-center justify-center bg-slate-100 text-slate-900 p-4 text-center">
