@@ -77,57 +77,62 @@ export interface PlayerPaymentItem {
 export async function getPlayerRegistrations(
   userId: string
 ): Promise<PlayerRegistrationItem[]> {
-  const registrations = await prisma.registration.findMany({
-    where: { registeredById: userId },
-    include: {
-      tournament: {
-        include: {
-          gameMode: {
-            select: { name: true, playersPerTeam: true },
-          },
-          matches: {
-            where: {
-              status: {
-                in: [
-                  MatchStatus.SCHEDULED,
-                  MatchStatus.ROOM_OPEN,
-                  MatchStatus.ONGOING,
-                ],
+  try {
+    const registrations = await prisma.registration.findMany({
+      where: { registeredById: userId },
+      include: {
+        tournament: {
+          include: {
+            gameMode: {
+              select: { name: true, playersPerTeam: true },
+            },
+            matches: {
+              where: {
+                status: {
+                  in: [
+                    MatchStatus.SCHEDULED,
+                    MatchStatus.ROOM_OPEN,
+                    MatchStatus.ONGOING,
+                  ],
+                },
               },
+              select: {
+                id: true,
+                matchNumber: true,
+                status: true,
+                scheduledAt: true,
+                roomId: true,
+                roomPassword: true,
+              },
+              orderBy: { matchNumber: "asc" },
             },
-            select: {
-              id: true,
-              matchNumber: true,
-              status: true,
-              scheduledAt: true,
-              roomId: true,
-              roomPassword: true,
+          },
+        },
+        team: {
+          include: {
+            members: {
+              orderBy: { position: "asc" },
             },
-            orderBy: { matchNumber: "asc" },
+          },
+        },
+        payment: {
+          select: {
+            id: true,
+            transactionReference: true,
+            status: true,
+            rejectionReason: true,
+            createdAt: true,
           },
         },
       },
-      team: {
-        include: {
-          members: {
-            orderBy: { position: "asc" },
-          },
-        },
-      },
-      payment: {
-        select: {
-          id: true,
-          transactionReference: true,
-          status: true,
-          rejectionReason: true,
-          createdAt: true,
-        },
-      },
-    },
-    orderBy: { registeredAt: "desc" },
-  });
+      orderBy: { registeredAt: "desc" },
+    });
 
-  return registrations;
+    return registrations;
+  } catch (error) {
+    console.error("getPlayerRegistrations database error:", error);
+    return [];
+  }
 }
 
 /**
@@ -136,27 +141,32 @@ export async function getPlayerRegistrations(
 export async function getPlayerPayments(
   userId: string
 ): Promise<PlayerPaymentItem[]> {
-  const payments = await prisma.payment.findMany({
-    where: {
-      registration: {
-        registeredById: userId,
+  try {
+    const payments = await prisma.payment.findMany({
+      where: {
+        registration: {
+          registeredById: userId,
+        },
       },
-    },
-    include: {
-      registration: {
-        select: {
-          id: true,
-          tournament: {
-            select: { id: true, name: true },
-          },
-          team: {
-            select: { id: true, name: true },
+      include: {
+        registration: {
+          select: {
+            id: true,
+            tournament: {
+              select: { id: true, name: true },
+            },
+            team: {
+              select: { id: true, name: true },
+            },
           },
         },
       },
-    },
-    orderBy: { createdAt: "desc" },
-  });
+      orderBy: { createdAt: "desc" },
+    });
 
-  return payments;
+    return payments;
+  } catch (error) {
+    console.error("getPlayerPayments database error:", error);
+    return [];
+  }
 }

@@ -86,59 +86,69 @@ export async function getPublicTournaments(
     };
   }
 
-  const tournaments = await prisma.tournament.findMany({
-    where: whereClause,
-    include: {
-      gameMode: true,
-      prizes: true,
-      _count: {
-        select: {
-          registrations: {
-            where: {
-              registrationStatus: {
-                in: [
-                  RegistrationStatus.CONFIRMED,
-                  RegistrationStatus.PAYMENT_SUBMITTED,
-                ],
+  try {
+    const tournaments = await prisma.tournament.findMany({
+      where: whereClause,
+      include: {
+        gameMode: true,
+        prizes: true,
+        _count: {
+          select: {
+            registrations: {
+              where: {
+                registrationStatus: {
+                  in: [
+                    RegistrationStatus.CONFIRMED,
+                    RegistrationStatus.PAYMENT_SUBMITTED,
+                  ],
+                },
               },
             },
           },
         },
       },
-    },
-    orderBy: [
-      { tournamentDate: "asc" },
-      { createdAt: "desc" },
-    ],
-  });
+      orderBy: [
+        { tournamentDate: "asc" },
+        { createdAt: "desc" },
+      ],
+    });
 
-  return tournaments.map((t) => {
-    const totalPrizePoolPaise = t.prizes.reduce(
-      (sum, p) => sum + p.prizeAmountPaise,
-      0
-    );
-    const registeredCount = t._count.registrations;
-    const availableSlots = Math.max(0, t.teamCapacity - registeredCount);
-    const isFull = registeredCount >= t.teamCapacity;
+    return tournaments.map((t) => {
+      const totalPrizePoolPaise = t.prizes.reduce(
+        (sum, p) => sum + p.prizeAmountPaise,
+        0
+      );
+      const registeredCount = t._count.registrations;
+      const availableSlots = Math.max(0, t.teamCapacity - registeredCount);
+      const isFull = registeredCount >= t.teamCapacity;
 
-    return {
-      ...t,
-      totalPrizePoolPaise,
-      registeredCount,
-      availableSlots,
-      isFull,
-    };
-  });
+      return {
+        ...t,
+        totalPrizePoolPaise,
+        registeredCount,
+        availableSlots,
+        isFull,
+      };
+    });
+  } catch (error) {
+    console.error("getPublicTournaments database connection error:", error);
+    return [];
+  }
 }
 
 /**
  * Fetches all active game modes for filter dropdowns.
  */
 export async function getActiveGameModes(): Promise<GameMode[]> {
-  return prisma.gameMode.findMany({
-    where: { isActive: true },
-    orderBy: { name: "asc" },
-  });
+  try {
+    return await prisma.gameMode.findMany({
+      where: { isActive: true },
+      orderBy: { name: "asc" },
+    });
+  } catch (error) {
+    console.error("getActiveGameModes database connection error:", error);
+    return [];
+  }
 }
 
 /**
@@ -148,53 +158,58 @@ export async function getActiveGameModes(): Promise<GameMode[]> {
 export async function getTournamentById(
   id: string
 ): Promise<TournamentDetail | null> {
-  const tournament = await prisma.tournament.findUnique({
-    where: { id },
-    include: {
-      gameMode: true,
-      prizes: {
-        orderBy: { position: "asc" },
-      },
-      registrations: {
-        where: {
-          registrationStatus: {
-            in: [
-              RegistrationStatus.CONFIRMED,
-              RegistrationStatus.PAYMENT_SUBMITTED,
-            ],
-          },
+  try {
+    const tournament = await prisma.tournament.findUnique({
+      where: { id },
+      include: {
+        gameMode: true,
+        prizes: {
+          orderBy: { position: "asc" },
         },
-        include: {
-          team: {
-            select: {
-              id: true,
-              name: true,
-              captainId: true,
+        registrations: {
+          where: {
+            registrationStatus: {
+              in: [
+                RegistrationStatus.CONFIRMED,
+                RegistrationStatus.PAYMENT_SUBMITTED,
+              ],
             },
           },
+          include: {
+            team: {
+              select: {
+                id: true,
+                name: true,
+                captainId: true,
+              },
+            },
+          },
+          orderBy: { registeredAt: "asc" },
         },
-        orderBy: { registeredAt: "asc" },
       },
-    },
-  });
+    });
 
-  if (!tournament) {
+    if (!tournament) {
+      return null;
+    }
+
+    const totalPrizePoolPaise = tournament.prizes.reduce(
+      (sum, p) => sum + p.prizeAmountPaise,
+      0
+    );
+    const registeredCount = tournament.registrations.length;
+    const availableSlots = Math.max(0, tournament.teamCapacity - registeredCount);
+    const isFull = registeredCount >= tournament.teamCapacity;
+
+    return {
+      ...tournament,
+      totalPrizePoolPaise,
+      registeredCount,
+      availableSlots,
+      isFull,
+    };
+  } catch (error) {
+    console.error("getTournamentById database connection error:", error);
     return null;
   }
-
-  const totalPrizePoolPaise = tournament.prizes.reduce(
-    (sum, p) => sum + p.prizeAmountPaise,
-    0
-  );
-  const registeredCount = tournament.registrations.length;
-  const availableSlots = Math.max(0, tournament.teamCapacity - registeredCount);
-  const isFull = registeredCount >= tournament.teamCapacity;
-
-  return {
-    ...tournament,
-    totalPrizePoolPaise,
-    registeredCount,
-    availableSlots,
-    isFull,
-  };
 }

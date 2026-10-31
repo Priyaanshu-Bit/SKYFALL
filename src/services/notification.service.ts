@@ -15,13 +15,18 @@ export async function getUserNotifications(
   userId: string,
   limit = 50
 ): Promise<UserNotificationItem[]> {
-  const notifications = await prisma.notification.findMany({
-    where: { userId },
-    orderBy: { createdAt: "desc" },
-    take: limit,
-  });
+  try {
+    const notifications = await prisma.notification.findMany({
+      where: { userId },
+      orderBy: { createdAt: "desc" },
+      take: limit,
+    });
 
-  return notifications;
+    return notifications;
+  } catch (error) {
+    console.error("getUserNotifications database error:", error);
+    return [];
+  }
 }
 
 /**
@@ -30,12 +35,17 @@ export async function getUserNotifications(
 export async function getUnreadNotificationCount(
   userId: string
 ): Promise<number> {
-  return prisma.notification.count({
-    where: {
-      userId,
-      isRead: false,
-    },
-  });
+  try {
+    return await prisma.notification.count({
+      where: {
+        userId,
+        isRead: false,
+      },
+    });
+  } catch (error) {
+    console.error("getUnreadNotificationCount database error:", error);
+    return 0;
+  }
 }
 
 /**
@@ -128,21 +138,26 @@ export async function getAllNotificationsForAdmin(filters?: {
     ];
   }
 
-  const notifications = await prisma.notification.findMany({
-    where: whereClause,
-    include: {
-      user: {
-        select: {
-          id: true,
-          name: true,
-          email: true,
-          phone: true,
+  try {
+    const notifications = await prisma.notification.findMany({
+      where: whereClause,
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            phone: true,
+          },
         },
       },
-    },
-    orderBy: { createdAt: "desc" },
-    take: 100,
-  });
+      orderBy: { createdAt: "desc" },
+      take: 100,
+    });
 
-  return notifications;
+    return notifications;
+  } catch (error) {
+    console.error("getAllNotificationsForAdmin database error:", error);
+    return [];
+  }
 }
