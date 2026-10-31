@@ -13,8 +13,8 @@
 | Project                     | SKYFALL                                             |
 | Development Status          | In Progress                                         |
 | Current Phase               | Phase 5: Tournament Browsing & Registration Engine  |
-| Current Task                | Task 5.3: Tournament Registration Workflow & Team Selection |
-| Completed Development Tasks | 9                                                   |
+| Current Task                | Task 5.4: Manual Payment Workflow (FamPay QR & UTR) |
+| Completed Development Tasks | 10                                                  |
 | Blocked Tasks               | 0                                                   |
 | Last Updated                | 31-10-2026                                          |
 
@@ -37,6 +37,7 @@ Record all successfully implemented and tested tasks here.
 | TASK-4.4 | Admin Dashboard Layout Shell & Navigation                                                     | 31-10-2026      | PASS        |
 | TASK-5.1 | Tournament Listing Page & Public Discovery                                                    | 31-10-2026      | PASS        |
 | TASK-5.2 | Tournament Details Page & Rules Display                                                       | 31-10-2026      | PASS        |
+| TASK-5.3 | Tournament Registration Workflow & Team Selection                                             | 31-10-2026      | PASS        |
 
 Rules:
 
@@ -47,32 +48,31 @@ Rules:
 
 ## 3. Current Task
 
-**Task ID:** TASK-5.3  
-**Task Name:** Tournament Registration Workflow & Team Selection  
+**Task ID:** TASK-5.4  
+**Task Name:** Manual Payment Workflow (FamPay QR & UTR Submission)  
 **Status:** NOT_STARTED  
 
 ### Task Description
 
-Construct the complete team tournament registration flow (`/tournaments/[id]/register`) according to `ui-context.md` (Section 3.5) and `features.md` (Section 3.4):
-- Server-side authentication check (`requireAuth()`) and registration window validation.
-- Captain squad selection or instant squad roster builder:
-  - Validates squad size against tournament game mode (e.g. 4 players for Clash Squad).
-  - Validates player in-game Free Fire UIDs.
-  - Ensures neither the team nor any player is already registered in this tournament.
-- Slot capacity check with race condition prevention.
-- Creates `Registration` record with `PENDING_PAYMENT` status.
-- Redirects to payment step (`/tournaments/[id]/payment?registrationId=...`).
+Construct the manual FamPay UPI QR code payment submission workflow (`/tournaments/[id]/payment`) according to `ui-context.md` (Section 3.6) and `features.md` (Section 5):
+- Displays active tournament registration brief and exact payment amount in INR.
+- Displays organizer FamPay UPI QR code with copyable UPI VPA and instructions.
+- Form collecting 12-digit UPI transaction reference (UTR) with format validation.
+- Screenshot proof upload with image preview.
+- Concurrency-safe creation or update of `Payment` record with status `UNDER_VERIFICATION`.
+- Transitions `Registration` status to `PAYMENT_SUBMITTED`.
+- Clear submission confirmation and guidance regarding admin review timeline.
 
 ### Completed Work
 
-- Tournament query service and details page ready.
+- Registration flow creates `Registration` with `PENDING_PAYMENT` and redirects to payment.
 
 ### Remaining Work
 
-- Plan TASK-5.3 and obtain user approval.
-- Implement registration service / actions with transaction validation.
-- Implement registration form component with squad selection and UID verification.
-- Implement `/tournaments/[id]/register/page.tsx`.
+- Plan TASK-5.4 and obtain user approval.
+- Implement payment submission service & actions with duplicate UTR detection.
+- Implement payment form component with QR code display and UTR validation.
+- Implement `/tournaments/[id]/payment/page.tsx`.
 - Run typecheck, lint, and build tests.
 - Commit and push to GitHub.
 
@@ -90,11 +90,11 @@ None.
 
 ## 4. Next Task
 
-**Task ID:** TASK-5.4  
-**Task Name:** Manual Payment Workflow (FamPay QR & UTR Submission)
+**Task ID:** TASK-5.5  
+**Task Name:** Player Dashboard Registration History & Live Status Tracking
 
 Describe the next task that should be undertaken after the current task is completed and verified:
-Construct the FamPay UPI QR code payment submission workflow (`/tournaments/[id]/payment`), allowing the captain to view the organizer's active FamPay QR, copy UPI ID, and submit the 12-digit transaction UTR reference with screenshot upload for admin verification.
+Construct the player dashboard registration status and history pages (`/dashboard/tournaments` and `/dashboard/payments`) displaying real-time status pills (`PENDING_PAYMENT`, `UNDER_VERIFICATION`, `CONFIRMED`, `REJECTED`), admin notes/rejection reasons, and next actionable steps.
 
 Do not begin this task while the current task remains incomplete.
 
@@ -131,6 +131,7 @@ Record the actual tests performed for the current task.
 | TEST-11 | Admin Shell & Operational Navigation Check      | Clean compilation        | Passed: typecheck, lint, build (λ)  | PASS        |
 | TEST-12 | Tournament Listing & Discovery Build & Check    | Clean compilation        | Passed: typecheck, lint, build (λ)  | PASS        |
 | TEST-13 | Tournament Details Page, Rules & Action Card    | Clean compilation        | Passed: typecheck, lint, build (λ)  | PASS        |
+| TEST-14 | Tournament Registration Workflow & Team Select   | Clean compilation        | Passed: typecheck, lint, build (λ)  | PASS        |
 
 Testing rules:
 
@@ -190,6 +191,7 @@ Maintain a concise chronological record of significant development activities.
 | 31-10-2026 | TASK-4.4 | Admin Dashboard Layout Shell & Operational Navigation           | Completed   |
 | 31-10-2026 | TASK-5.1 | Tournament Listing Page & Public Discovery                      | Completed   |
 | 31-10-2026 | TASK-5.2 | Tournament Details Page & Rules Display                         | Completed   |
+| 31-10-2026 | TASK-5.3 | Tournament Registration Workflow & Team Selection               | Completed   |
 
 ## 10. Mandatory Task Workflow
 
