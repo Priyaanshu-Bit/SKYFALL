@@ -4,7 +4,8 @@ import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { UserButton } from "@clerk/nextjs";
-import { Flame, Bell, Trophy, ArrowUpRight } from "lucide-react";
+import { Flame, Trophy, ArrowUpRight } from "lucide-react";
+import { NotificationBell } from "@/components/layout/NotificationBell";
 
 const TITLE_MAP: Record<string, string> = {
   "/dashboard": "Dashboard Overview",
@@ -80,14 +81,8 @@ export function PlayerHeader() {
           <ArrowUpRight className="h-3 w-3 text-slate-500" />
         </Link>
 
-        {/* Notifications shortcut */}
-        <Link
-          href="/dashboard/notifications"
-          className="relative flex h-9 w-9 items-center justify-center rounded-lg border border-slate-800 bg-slate-900/60 text-slate-300 transition-colors hover:bg-slate-800 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-skyfall-400"
-          aria-label="Notifications"
-        >
-          <Bell className="h-4 w-4" />
-        </Link>
+        {/* Interactive In-App Notification Center */}
+        <NotificationBell viewAllHref="/dashboard/notifications" />
 
         {/* Clerk User Button */}
         <UserButton

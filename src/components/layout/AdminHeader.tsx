@@ -8,12 +8,12 @@ import {
   Shield,
   Menu,
   X,
-  Bell,
   ExternalLink,
   Flame,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ADMIN_NAV_ITEMS } from "./AdminSidebar";
+import { NotificationBell } from "@/components/layout/NotificationBell";
 
 const ADMIN_TITLE_MAP: Record<string, string> = {
   "/admin": "Operations Overview",
@@ -123,13 +123,10 @@ export function AdminHeader() {
             <ExternalLink className="h-3 w-3 text-slate-400" />
           </Link>
 
-          <Link
-            href="/admin/notifications"
-            className="relative flex h-9 w-9 items-center justify-center rounded-lg border border-slate-800 bg-slate-900/60 text-slate-300 transition-colors hover:bg-slate-800 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
-            aria-label="Admin Alerts"
-          >
-            <Bell className="h-4 w-4" />
-          </Link>
+          <NotificationBell
+            viewAllHref="/admin/notifications"
+            className="focus-visible:ring-amber-400"
+          />
 
           <UserButton
             appearance={{
