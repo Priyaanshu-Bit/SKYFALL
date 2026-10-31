@@ -12,9 +12,9 @@
 | --------------------------- | --------------------------------------------------- |
 | Project                     | SKYFALL                                             |
 | Development Status          | In Progress                                         |
-| Current Phase               | Phase 4: Shared UI Primitives & Layout Shells       |
-| Current Task                | Task 4.4: Admin Dashboard Layout Shell & Navigation  |
-| Completed Development Tasks | 6                                                   |
+| Current Phase               | Phase 5: Tournament Browsing & Registration Engine  |
+| Current Task                | Task 5.1: Tournament Listing Page & Public Discovery |
+| Completed Development Tasks | 7                                                   |
 | Blocked Tasks               | 0                                                   |
 | Last Updated                | 31-10-2026                                          |
 
@@ -34,6 +34,7 @@ Record all successfully implemented and tested tasks here.
 | TASK-4.1 | Shared UI Component Primitives & Base Esports Design System                                   | 31-10-2026      | PASS        |
 | TASK-4.2 | Public Website Layout Shell & Responsive Navigation System                                    | 31-10-2026      | PASS        |
 | TASK-4.3 | Player Dashboard Layout Shell & Mobile Bottom Navigation                                      | 31-10-2026      | PASS        |
+| TASK-4.4 | Admin Dashboard Layout Shell & Navigation                                                     | 31-10-2026      | PASS        |
 
 Rules:
 
@@ -44,29 +45,30 @@ Rules:
 
 ## 3. Current Task
 
-**Task ID:** TASK-4.4  
-**Task Name:** Admin Dashboard Layout Shell & Navigation  
+**Task ID:** TASK-5.1  
+**Task Name:** Tournament Listing Page & Public Discovery  
 **Status:** NOT_STARTED  
 
 ### Task Description
 
-Construct the dedicated admin operations layout shell according to `ui-context.md` (Section 5) and `features.md` (Section 9):
-- `AdminSidebar.tsx`: Desktop left sidebar with admin operations (`Overview`, `Tournaments`, `Approvals`, `Matches`, `Disputes`, `Finance`, `Settings`), active link detection, and website return link.
-- `AdminHeader.tsx`: Top bar with admin breadcrumbs, quick link to public site, and Clerk `<UserButton />`.
-- `src/app/admin/layout.tsx`: Layout shell enforcing admin role authentication (`requireAdmin()`) on the server before rendering the dashboard frame.
-- `src/app/admin/page.tsx`: Baseline operational dashboard overview landing page.
+Construct the public tournament browsing and discovery page (`/tournaments`) according to `ui-context.md` (Section 3.2) and `features.md` (Section 2):
+- Search input by tournament name.
+- Filter chips/tabs by status: All, Open for Registration, Ongoing, Completed.
+- Filter by game mode: All, Clash Squad (4v4), Battle Royale Solo, Battle Royale Squad.
+- Responsive tournament cards showing banner, title, game mode badge, format, entry fee (₹ or Free), prize pool, team slots (e.g. 12/48 teams filled with progress bar), date/time, and direct "Register Now" / "View Details" action.
+- Empty state with clear filters reset button.
+- Pagination or infinite scrolling.
 
 ### Completed Work
 
-- Audit and planning.
+- Layout shell and primitives ready.
 
 ### Remaining Work
 
-- Plan TASK-4.4 and obtain user approval.
-- Implement `src/components/layout/AdminSidebar.tsx`.
-- Implement `src/components/layout/AdminHeader.tsx`.
-- Implement `src/app/admin/layout.tsx`.
-- Implement baseline `src/app/admin/page.tsx`.
+- Plan TASK-5.1 and obtain user approval.
+- Implement tournament querying service / server data fetching.
+- Implement filter components and interactive search state.
+- Implement responsive tournament card grid and empty state.
 - Run typecheck, lint, and build tests.
 - Commit and push to GitHub.
 
@@ -84,11 +86,11 @@ None.
 
 ## 4. Next Task
 
-**Task ID:** TASK-5.1  
-**Task Name:** Tournament Listing Page & Public Discovery
+**Task ID:** TASK-5.2  
+**Task Name:** Tournament Details Page & Rules Display
 
 Describe the next task that should be undertaken after the current task is completed and verified:
-Build the public tournament browsing and discovery page (`/tournaments`) with search, status filters (open, ongoing, completed), game mode badges, entry fee, prize pool display, and pagination/grid layout.
+Construct the rich public tournament details page (`/tournaments/[id]`) with banner, prize breakdown table, format & schedule, rules & instructions tabs, registered teams list, and dynamic registration CTA button based on user auth & registration status.
 
 Do not begin this task while the current task remains incomplete.
 
@@ -122,6 +124,7 @@ Record the actual tests performed for the current task.
 | TEST-08 | UI Primitives Compilation & Accessibility        | 0 type or lint errors    | All 11 primitives passed cleanly    | PASS        |
 | TEST-09 | Public Shell & Navigation Typecheck & Build      | Clean compilation        | Static and dynamic routes compiled  | PASS        |
 | TEST-10 | Player Shell & Bottom Navigation Build & Check   | Clean compilation        | Passed: typecheck, lint, build (λ)  | PASS        |
+| TEST-11 | Admin Shell & Operational Navigation Check      | Clean compilation        | Passed: typecheck, lint, build (λ)  | PASS        |
 
 Testing rules:
 
@@ -178,6 +181,7 @@ Maintain a concise chronological record of significant development activities.
 | 31-10-2026 | TASK-4.1 | Shared UI Component Primitives & Base Esports Design System     | Completed   |
 | 31-10-2026 | TASK-4.2 | Public Website Layout Shell & Responsive Navigation System      | Completed   |
 | 31-10-2026 | TASK-4.3 | Player Dashboard Layout Shell & Mobile Bottom Navigation        | Completed   |
+| 31-10-2026 | TASK-4.4 | Admin Dashboard Layout Shell & Operational Navigation           | Completed   |
 
 ## 10. Mandatory Task Workflow
 
