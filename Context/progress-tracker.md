@@ -13,8 +13,8 @@
 | Project                     | SKYFALL                                             |
 | Development Status          | In Progress                                         |
 | Current Phase               | Phase 4: Shared UI Primitives & Layout Shells       |
-| Current Task                | Task 4.2 Completed; Ready for Task 4.3              |
-| Completed Development Tasks | 5                                                   |
+| Current Task                | Task 4.4: Admin Dashboard Layout Shell & Navigation  |
+| Completed Development Tasks | 6                                                   |
 | Blocked Tasks               | 0                                                   |
 | Last Updated                | 31-10-2026                                          |
 
@@ -33,6 +33,7 @@ Record all successfully implemented and tested tasks here.
 | TASK-3.1 | Clerk Authentication, Root `proxy.ts`, Role-Based Authorization & User Profile Integration    | 31-10-2026      | PASS        |
 | TASK-4.1 | Shared UI Component Primitives & Base Esports Design System                                   | 31-10-2026      | PASS        |
 | TASK-4.2 | Public Website Layout Shell & Responsive Navigation System                                    | 31-10-2026      | PASS        |
+| TASK-4.3 | Player Dashboard Layout Shell & Mobile Bottom Navigation                                      | 31-10-2026      | PASS        |
 
 Rules:
 
@@ -43,49 +44,35 @@ Rules:
 
 ## 3. Current Task
 
-**Task ID:** TASK-4.2  
-**Task Name:** Public Website Layout Shell & Navigation  
-**Status:** COMPLETED  
+**Task ID:** TASK-4.4  
+**Task Name:** Admin Dashboard Layout Shell & Navigation  
+**Status:** NOT_STARTED  
 
 ### Task Description
 
-Build the reusable public website layout and navigation system according to `ui-context.md`, `architecture.md`, `code-standards.md`, and `features.md`:
-- `PublicHeader.tsx`: Official `SKYFALL` branding, responsive desktop navbar, mobile drawer with hamburger toggle, active link indicators, auth state integration (`Dashboard` / `<UserButton />` vs `Sign In`).
-- `PublicFooter.tsx`: Branding, platform links, tournament information, trademark disclaimer, copyright.
-- `src/app/(public)/layout.tsx`: Isolates the public shell layout without affecting player or admin layouts.
-- Relocate root `src/app/page.tsx` into `src/app/(public)/page.tsx` for clean layout inheritance.
+Construct the dedicated admin operations layout shell according to `ui-context.md` (Section 5) and `features.md` (Section 9):
+- `AdminSidebar.tsx`: Desktop left sidebar with admin operations (`Overview`, `Tournaments`, `Approvals`, `Matches`, `Disputes`, `Finance`, `Settings`), active link detection, and website return link.
+- `AdminHeader.tsx`: Top bar with admin breadcrumbs, quick link to public site, and Clerk `<UserButton />`.
+- `src/app/admin/layout.tsx`: Layout shell enforcing admin role authentication (`requireAdmin()`) on the server before rendering the dashboard frame.
+- `src/app/admin/page.tsx`: Baseline operational dashboard overview landing page.
 
 ### Completed Work
 
-- Created `src/components/layout/PublicHeader.tsx`:
-  - `SKYFALL` brand mark with esports flame gradient.
-  - Desktop nav links (Home, Tournaments, Results, Leaderboards, About, Contact) with dynamic active link indicators based on `usePathname()`.
-  - Client-side auth integration via Clerk `useAuth()` rendering "Dashboard" + `<UserButton />` when signed in, or "Sign In" button when signed out.
-  - Mobile hamburger toggle with accessible `aria-expanded` and `aria-label`.
-  - Mobile slide-down navigation drawer with touch targets >= 48px and automatic close on route change or ESC key press.
-- Created `src/components/layout/PublicFooter.tsx`:
-  - `SKYFALL` esports branding and platform mission statement.
-  - Navigation columns: Platform links, Tournament rules & anti-cheat notice, Organizer support (Email & UPI support via FamPay).
-  - Free Fire trademark disclaimer and copyright statement (`© 2026 SKYFALL. All rights reserved.`).
-- Created `src/app/(public)/layout.tsx`:
-  - Encloses public routes with `PublicHeader`, dynamic `<main className="flex-1">`, and `PublicFooter`.
-- Relocated baseline `src/app/page.tsx` to `src/app/(public)/page.tsx` ensuring the homepage route `/` naturally inherits the public shell layout.
-- Staged newly added `Context/features.md`.
-- Verified: `npm run typecheck` (0 errors), `npm run lint` (0 warnings/errors), `npm run build` (passed cleanly).
+- Audit and planning.
 
 ### Remaining Work
 
-- None for Task 4.2. Ready for Task 4.3.
+- Plan TASK-4.4 and obtain user approval.
+- Implement `src/components/layout/AdminSidebar.tsx`.
+- Implement `src/components/layout/AdminHeader.tsx`.
+- Implement `src/app/admin/layout.tsx`.
+- Implement baseline `src/app/admin/page.tsx`.
+- Run typecheck, lint, and build tests.
+- Commit and push to GitHub.
 
 ### Files Created or Modified
 
-- `src/components/layout/PublicHeader.tsx`
-- `src/components/layout/PublicFooter.tsx`
-- `src/app/(public)/layout.tsx`
-- `src/app/(public)/page.tsx`
-- `src/app/page.tsx` (removed/relocated)
-- `Context/features.md`
-- `Context/progress-tracker.md`
+- To be determined upon implementation.
 
 ### Questions Regarding Current Task
 
@@ -97,11 +84,11 @@ None.
 
 ## 4. Next Task
 
-**Task ID:** TASK-4.3  
-**Task Name:** Player Dashboard Layout Shell & Mobile Bottom Navigation
+**Task ID:** TASK-5.1  
+**Task Name:** Tournament Listing Page & Public Discovery
 
 Describe the next task that should be undertaken after the current task is completed and verified:
-Construct the player dashboard shell (`src/app/(player)/layout.tsx`, `PlayerSidebar.tsx`, `PlayerMobileNav.tsx` with mobile bottom navigation, and dashboard top bar with user profile/notifications).
+Build the public tournament browsing and discovery page (`/tournaments`) with search, status filters (open, ongoing, completed), game mode badges, entry fee, prize pool display, and pagination/grid layout.
 
 Do not begin this task while the current task remains incomplete.
 
@@ -123,17 +110,18 @@ Never mark an implementation as `COMPLETED` simply because the code has been wri
 
 Record the actual tests performed for the current task.
 
-| Test ID | Test Description                                 | Expected Result          | Actual Result                       | Status |
-| ------- | ------------------------------------------------ | ------------------------ | ----------------------------------- | ------ |
-| TEST-01 | Remote Git repository connection and initial push| Push succeeds to main    | Succeeded (29c0abe)                 | PASS   |
-| TEST-02 | TypeScript type check (`tsc --noEmit`)           | 0 errors                 | Passed cleanly with 0 errors        | PASS   |
-| TEST-03 | ESLint code quality check (`npm run lint`)       | 0 errors or warnings     | "No ESLint warnings or errors"      | PASS   |
-| TEST-04 | Next.js production build (`npm run build`)       | Clean compilation        | Static and dynamic routes compiled  | PASS   |
-| TEST-05 | Prisma Schema Validation (`prisma validate`)     | Valid schema             | "schema is valid" 🚀                | PASS   |
-| TEST-06 | Prisma Client Generation (`prisma generate`)     | Type-safe client gen     | Generated to node_modules in 80ms   | PASS   |
-| TEST-07 | Clerk Auth & proxy.ts Route Resolution           | Clean compilation        | Compiled dynamic routes cleanly     | PASS   |
-| TEST-08 | UI Primitives Compilation & Accessibility        | 0 type or lint errors    | All 11 primitives passed cleanly    | PASS   |
-| TEST-09 | Public Shell & Navigation Typecheck & Build      | Clean compilation        | Static and dynamic routes compiled  | PASS   |
+| Test ID | Test Description                                 | Expected Result          | Actual Result                       | Status      |
+| ------- | ------------------------------------------------ | ------------------------ | ----------------------------------- | ----------- |
+| TEST-01 | Remote Git repository connection and initial push| Push succeeds to main    | Succeeded (29c0abe)                 | PASS        |
+| TEST-02 | TypeScript type check (`tsc --noEmit`)           | 0 errors                 | Passed cleanly with 0 errors        | PASS        |
+| TEST-03 | ESLint code quality check (`npm run lint`)       | 0 errors or warnings     | "No ESLint warnings or errors"      | PASS        |
+| TEST-04 | Next.js production build (`npm run build`)       | Clean compilation        | Static and dynamic routes compiled  | PASS        |
+| TEST-05 | Prisma Schema Validation (`prisma validate`)     | Valid schema             | "schema is valid" 🚀                | PASS        |
+| TEST-06 | Prisma Client Generation (`prisma generate`)     | Type-safe client gen     | Generated to node_modules in 80ms   | PASS        |
+| TEST-07 | Clerk Auth & proxy.ts Route Resolution           | Clean compilation        | Compiled dynamic routes cleanly     | PASS        |
+| TEST-08 | UI Primitives Compilation & Accessibility        | 0 type or lint errors    | All 11 primitives passed cleanly    | PASS        |
+| TEST-09 | Public Shell & Navigation Typecheck & Build      | Clean compilation        | Static and dynamic routes compiled  | PASS        |
+| TEST-10 | Player Shell & Bottom Navigation Build & Check   | Clean compilation        | Passed: typecheck, lint, build (λ)  | PASS        |
 
 Testing rules:
 
@@ -189,6 +177,7 @@ Maintain a concise chronological record of significant development activities.
 | 31-10-2026 | TASK-3.1 | Clerk Auth, Root proxy.ts, Server Auth Helpers & User Sync      | Completed   |
 | 31-10-2026 | TASK-4.1 | Shared UI Component Primitives & Base Esports Design System     | Completed   |
 | 31-10-2026 | TASK-4.2 | Public Website Layout Shell & Responsive Navigation System      | Completed   |
+| 31-10-2026 | TASK-4.3 | Player Dashboard Layout Shell & Mobile Bottom Navigation        | Completed   |
 
 ## 10. Mandatory Task Workflow
 
