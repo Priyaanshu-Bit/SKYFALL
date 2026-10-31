@@ -12,9 +12,9 @@
 | --------------------------- | --------------------------------------------------- |
 | Project                     | SKYFALL                                             |
 | Development Status          | In Progress                                         |
-| Current Phase               | Phase 6: Admin Operational Workbench & Verification |
-| Current Task                | Task 6.5: Financial Ledger & Prize Payout Fulfilment|
-| Completed Development Tasks | 16                                                  |
+| Current Phase               | Phase 7: Real-Time Sync & Notifications             |
+| Current Task                | Task 7.1: In-App Player Notification Center         |
+| Completed Development Tasks | 17                                                  |
 | Blocked Tasks               | 0                                                   |
 | Last Updated                | 31-10-2026                                          |
 
@@ -44,6 +44,7 @@ Record all successfully implemented and tested tasks here.
 | TASK-6.2 | Admin Tournament Creation Engine (Multi-Step Form & Prize Allocation)                         | 31-10-2026      | PASS        |
 | TASK-6.3 | Admin Match Room Operations & Bracket Distribution                                            | 31-10-2026      | PASS        |
 | TASK-6.4 | Admin Match Result Reporting, Standings & Bracket Progression                                 | 31-10-2026      | PASS        |
+| TASK-6.5 | Financial Ledger & Prize Payout Fulfilment Engine                                             | 31-10-2026      | PASS        |
 
 Rules:
 
@@ -54,31 +55,27 @@ Rules:
 
 ## 3. Current Task
 
-**Task ID:** TASK-6.5  
-**Task Name:** Financial Ledger & Prize Payout Fulfilment Engine  
+**Task ID:** TASK-7.1  
+**Task Name:** In-App Player Notification Center & Scheduled Sync  
 **Status:** NOT_STARTED  
 
 ### Task Description
 
-Construct the financial management workbench (`/admin/financials`) according to `ui-context.md` (Section 5.12) and `features.md` (Section 5.11):
-- Comprehensive financial ledger:
-  - Total verified entry fee collections vs pending/unverified payments.
-  - Total committed prize pool obligations vs actual recorded payouts.
-  - Net platform organizer margin calculation (`Collected Fees - Prize Obligations - Refunds`).
-- Prize fulfillment tracking:
-  - View winning squads assigned from completed matches.
-  - Record prize payout fulfillment: transition status (`ASSIGNED` $\rightarrow$ `PAID`), input transaction reference (FamPay/UPI UTR), and record payment timestamp.
-  - Dispatch prize payment confirmation notification to winning squad captain.
+Construct the in-app player notification center and scheduled task handlers according to `ui-context.md` (Section 4.5) and `features.md` (Section 8):
+- Real-time notification drawer/modal accessible from player and admin headers.
+- Unread badge counter with optimistic mark-as-read and mark-all-read capabilities.
+- Categorized notification cards (Registration status, Payment verification approval/rejection, Room ID disclosure, Match results, Prize payouts).
+- Direct deep-links to relevant dashboard views (`/dashboard/tournaments`, `/dashboard/payments`).
 
 ### Completed Work
 
-- TASK-6.4 is 100% complete. Admin match result reporting, scoreboard statistics entry, automated knockout bracket winner advancement, and tournament champion declaration verified and tested.
+- Phase 6 is 100% complete! Admin payment verification queue, tournament creation engine, match room operations, match result reporting, and financial ledger with prize payout fulfillment fully implemented and passing all tests.
 
 ### Remaining Work
 
-- Plan TASK-6.5 and obtain user approval.
-- Implement financial ledger service and prize payout server actions.
-- Implement financial analytics and payout recording components.
+- Plan TASK-7.1 and obtain user approval.
+- Implement player notification service and mark-as-read server actions.
+- Implement header notification bell trigger and interactive drawer.
 - Run typecheck, lint, and build tests.
 - Commit and push to GitHub.
 
@@ -96,11 +93,11 @@ None.
 
 ## 4. Next Task
 
-**Task ID:** TASK-7.1  
-**Task Name:** Automated Notifications & Real-Time Sync Engine
+**Task ID:** TASK-7.2  
+**Task Name:** Platform Polish, Audio/Sound Feedback & Deployment Verification
 
 Describe the next task that should be undertaken after the current task is completed and verified:
-Construct the in-app player notification center and scheduled tasks (Trigger.dev / cron) for automated match reminders, registration deadline warnings, and room credential release alerts.
+Final platform visual polish, responsive mobile viewport testing, audio feedback for critical actions (button clicks, room open, payout), environment audit, and production deployment check.
 
 Do not begin this task while the current task remains incomplete.
 
@@ -144,6 +141,7 @@ Record the actual tests performed for the current task.
 | TEST-18 | Admin Tournament Creation & Prize Allocation     | Clean compilation        | Passed: typecheck, lint, build (ƒ)  | PASS        |
 | TEST-19 | Admin Match Room Operations & Bracket Generation | Clean compilation        | Passed: typecheck, lint, build (ƒ)  | PASS        |
 | TEST-20 | Match Result Reporting, Standings & Progression  | Clean compilation        | Passed: typecheck, lint, build (ƒ)  | PASS        |
+| TEST-21 | Financial Ledger, Margin & Prize Payout Check    | Clean compilation        | Passed: typecheck, lint, build (ƒ)  | PASS        |
 
 Testing rules:
 
@@ -210,6 +208,7 @@ Maintain a concise chronological record of significant development activities.
 | 31-10-2026 | TASK-6.2 | Admin Tournament Creation Engine & Prize Allocation Breakdown   | Completed   |
 | 31-10-2026 | TASK-6.3 | Admin Match Room Operations & Single-Elimination Bracket Gen    | Completed   |
 | 31-10-2026 | TASK-6.4 | Admin Match Result Reporting, Standings & Bracket Progression   | Completed   |
+| 31-10-2026 | TASK-6.5 | Financial Ledger, Organizer Margin & Prize Payout Fulfilment    | Completed   |
 
 ## 10. Mandatory Task Workflow
 

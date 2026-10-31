@@ -11,6 +11,7 @@ import {
   updateMatchRoom,
 } from "@/services/admin-match.service";
 import { recordMatchResult } from "@/services/admin-result.service";
+import { fulfillPrizePayout } from "@/services/admin-financial.service";
 import type { CreateTournamentInput } from "@/schemas/tournament.schema";
 import type { TournamentStatus, MatchStatus } from "@prisma/client";
 import { revalidatePath } from "next/cache";
@@ -103,6 +104,26 @@ export async function recordMatchResultAction(input: {
     revalidatePath("/tournaments");
     revalidatePath("/dashboard/tournaments");
     revalidatePath("/admin");
+  }
+  return res;
+}
+
+export async function fulfillPrizePayoutAction(
+  prizeId: string,
+  input: {
+    transactionReference: string;
+    notes?: string;
+  }
+) {
+  const admin = await requireAdmin();
+  const res = await fulfillPrizePayout(prizeId, {
+    ...input,
+    adminUserId: admin.id,
+  });
+  if (res.success) {
+    revalidatePath("/admin/financials");
+    revalidatePath("/admin");
+    revalidatePath("/dashboard/tournaments");
   }
   return res;
 }
