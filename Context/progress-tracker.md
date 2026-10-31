@@ -12,9 +12,9 @@
 | --------------------------- | --------------------------------------------------- |
 | Project                     | SKYFALL                                             |
 | Development Status          | In Progress                                         |
-| Current Phase               | Phase 3: Authentication & Role-Based Authorization  |
-| Current Task                | Task 3.1 Completed; Ready for Task 4.1              |
-| Completed Development Tasks | 3                                                   |
+| Current Phase               | Phase 4: Shared UI Primitives & Layout Shells       |
+| Current Task                | Task 4.1 Completed; Ready for Task 4.2              |
+| Completed Development Tasks | 4                                                   |
 | Blocked Tasks               | 0                                                   |
 | Last Updated                | 31-10-2026                                          |
 
@@ -31,6 +31,7 @@ Record all successfully implemented and tested tasks here.
 | TASK-1.1 | Next.js 15, React 19, TypeScript & Tailwind Application Setup with Modular Architecture       | 31-10-2026      | PASS        |
 | TASK-2.1 | Database Modeling, Prisma Schema, Client Singleton & Seed Configuration                       | 31-10-2026      | PASS        |
 | TASK-3.1 | Clerk Authentication, Root `proxy.ts`, Role-Based Authorization & User Profile Integration    | 31-10-2026      | PASS        |
+| TASK-4.1 | Shared UI Component Primitives & Base Esports Design System                                   | 31-10-2026      | PASS        |
 
 Rules:
 
@@ -41,50 +42,49 @@ Rules:
 
 ## 3. Current Task
 
-**Task ID:** TASK-3.1  
-**Task Name:** Clerk Authentication & Role-Based Authorization Integration  
+**Task ID:** TASK-4.1  
+**Task Name:** Shared UI Component Primitives & Base Design System  
 **Status:** COMPLETED  
 
 ### Task Description
 
-Install `@clerk/nextjs` and `@clerk/themes`, implement `proxy.ts` at the project root for route protection, set up server-side auth utility helpers (`getCurrentUser`, `requireAuth`, `requireAdmin`, `isCurrentUserAdmin`), create user synchronization service (`UserService`) syncing Clerk identity with PostgreSQL and assigning `ADMIN` role based on `ADMIN_EMAIL_ALLOWLIST`, configure branded sign-in and sign-up pages, create `/api/users/me` route handler, and wrap application in `<ClerkProvider>`.
+Construct the reusable UI component library in `src/components/ui/` per `ui-context.md`: `Button`, `Input`, `Textarea`, `Select`, `Card`, `Modal`, `ConfirmationDialog`, `Badge` (with `TournamentStatusBadge`, `PaymentStatusBadge`, and `RegistrationStatusBadge`), `LoadingIndicator`, `EmptyState`, and `ErrorState` with responsive mobile-first styling and esports dark aesthetic.
 
 ### Completed Work
 
-- Installed `@clerk/nextjs` and `@clerk/themes`.
-- Implemented `proxy.ts` at the root project directory configured with route matchers:
-  - Public routes permitted without authentication: `/`, `/tournaments(.*)`, `/results(.*)`, `/leaderboards(.*)`, `/about(.*)`, `/contact(.*)`, `/sign-in(.*)`, `/sign-up(.*)`.
-  - Protected player routes and admin routes (`/admin(.*)`, `/api/admin(.*)`) enforced via `auth.protect()`.
-- Created `src/lib/auth.ts` providing server-side authorization boundaries:
-  - `getCurrentUser()`: Resolves authenticated Clerk identity to the PostgreSQL `User` record with automatic profile provisioning.
-  - `requireAuth()`: Enforces authentication on server components and route handlers.
-  - `requireAdmin()`: Enforces server-verified `ADMIN` role from PostgreSQL.
-  - `isCurrentUserAdmin()`: Boolean check for conditional server rendering.
-- Created `src/services/user.service.ts` managing user synchronization and profile updates.
-- Wrapped `src/app/layout.tsx` with `<ClerkProvider>` and dark theme configuration.
-- Created dark-themed esports sign-in and sign-up pages:
-  - `src/app/(public)/sign-in/[[...sign-in]]/page.tsx`
-  - `src/app/(public)/sign-up/[[...sign-up]]/page.tsx`
-- Created `/api/users/me` Route Handler (`GET`, `PATCH`).
-- Enhanced `src/app/page.tsx` with server-side authentication state awareness.
-- Tested: `npm run typecheck` (0 errors), `npm run lint` (0 warnings/errors), `npm run build` (all routes compiled cleanly).
+- Created `src/components/ui/button.tsx` with CVA variants (`default` flame orange, `secondary`, `outline`, `destructive`, `ghost`, `link`), sizes (`sm`, `default`, `lg`, `icon`), touch target min-height >= 44px, and loading spinner state.
+- Created `src/components/ui/input.tsx` with touch-friendly dimensions, label support, error state, hint text, and accessibility attributes (`aria-invalid`, `aria-describedby`).
+- Created `src/components/ui/textarea.tsx` supporting multi-line rules and descriptions with accessible labels and errors.
+- Created `src/components/ui/select.tsx` dropdown component with custom icon and accessible options.
+- Created `src/components/ui/card.tsx` layout primitives (`Card`, `CardHeader`, `CardTitle`, `CardDescription`, `CardContent`, `CardFooter`).
+- Created `src/components/ui/badge.tsx` with generic badges and domain-specific status badges:
+  - `TournamentStatusBadge`: Draft, Upcoming, Registration Open, Registration Closed, Live/Ongoing, Completed, Cancelled.
+  - `PaymentStatusBadge`: Under Review, Verified/Approved, Payment Rejected, Awaiting Payment, Refunded.
+  - `RegistrationStatusBadge`: Confirmed Slot, Payment Submitted, Pending Payment, Rejected, Cancelled, Refunded.
+- Created `src/components/ui/modal.tsx` with backdrop blur, keyboard ESC dismissal, body scroll lock, and touch dismiss.
+- Created `src/components/ui/confirmation-dialog.tsx` for destructive/critical admin operations (cancelling tournaments, rejecting payments, publishing results).
+- Created `src/components/ui/loading-indicator.tsx`, `empty-state.tsx`, and `error-state.tsx`.
+- Created barrel export `src/components/ui/index.ts`.
+- Verified: `npm run typecheck` (0 errors), `npm run lint` (0 warnings/errors), `npm run build` (passed cleanly).
 
 ### Remaining Work
 
-- None for Task 3.1. Ready for Task 4.1.
+- None for Task 4.1. Ready for Task 4.2.
 
 ### Files Created or Modified
 
-- `proxy.ts`
-- `src/lib/auth.ts`
-- `src/services/user.service.ts`
-- `src/app/layout.tsx`
-- `src/app/page.tsx`
-- `src/app/(public)/sign-in/[[...sign-in]]/page.tsx`
-- `src/app/(public)/sign-up/[[...sign-up]]/page.tsx`
-- `src/app/api/users/me/route.ts`
-- `package.json`
-- `package-lock.json`
+- `src/components/ui/button.tsx`
+- `src/components/ui/input.tsx`
+- `src/components/ui/textarea.tsx`
+- `src/components/ui/select.tsx`
+- `src/components/ui/card.tsx`
+- `src/components/ui/badge.tsx`
+- `src/components/ui/modal.tsx`
+- `src/components/ui/confirmation-dialog.tsx`
+- `src/components/ui/loading-indicator.tsx`
+- `src/components/ui/empty-state.tsx`
+- `src/components/ui/error-state.tsx`
+- `src/components/ui/index.ts`
 - `Context/progress-tracker.md`
 
 ### Questions Regarding Current Task
@@ -97,11 +97,11 @@ None.
 
 ## 4. Next Task
 
-**Task ID:** TASK-4.1  
-**Task Name:** Shared UI Component Primitives & Base Design System
+**Task ID:** TASK-4.2  
+**Task Name:** Public Website Layout Shell & Navigation
 
 Describe the next task that should be undertaken after the current task is completed and verified:
-Construct reusable UI components according to `ui-context.md` (Section 7): `Button`, `Input`, `Select`, `Modal`, `ConfirmationDialog`, `TournamentStatusBadge`, `PaymentStatusBadge`, `Toast`, `LoadingIndicator`, `EmptyState`, and `ErrorState` with responsive mobile-first styling and esports aesthetic.
+Construct the public layout shell (`src/components/layout/PublicHeader.tsx`, `PublicFooter.tsx`, and `src/app/(public)/layout.tsx`) with mobile responsive navigation, desktop navbar, branding (`SKYFALL`), and active route indicators.
 
 Do not begin this task while the current task remains incomplete.
 
@@ -132,6 +132,7 @@ Record the actual tests performed for the current task.
 | TEST-05 | Prisma Schema Validation (`prisma validate`)     | Valid schema             | "schema is valid" 🚀                | PASS   |
 | TEST-06 | Prisma Client Generation (`prisma generate`)     | Type-safe client gen     | Generated to node_modules in 80ms   | PASS   |
 | TEST-07 | Clerk Auth & proxy.ts Route Resolution           | Clean compilation        | Compiled dynamic routes cleanly     | PASS   |
+| TEST-08 | UI Primitives Compilation & Accessibility        | 0 type or lint errors    | All 11 primitives passed cleanly    | PASS   |
 
 Testing rules:
 
@@ -185,6 +186,7 @@ Maintain a concise chronological record of significant development activities.
 | 31-10-2026 | TASK-1.1 | Next.js 15, React 19, TS, Tailwind CSS & modular architecture   | Completed   |
 | 31-10-2026 | TASK-2.1 | Database Schema, Prisma 6.4.1 Client Singleton & Seed Config    | Completed   |
 | 31-10-2026 | TASK-3.1 | Clerk Auth, Root proxy.ts, Server Auth Helpers & User Sync      | Completed   |
+| 31-10-2026 | TASK-4.1 | Shared UI Component Primitives & Base Esports Design System     | Completed   |
 
 ## 10. Mandatory Task Workflow
 
