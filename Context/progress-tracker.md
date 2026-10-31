@@ -13,8 +13,8 @@
 | Project                     | SKYFALL                                             |
 | Development Status          | In Progress                                         |
 | Current Phase               | Phase 5: Tournament Browsing & Registration Engine  |
-| Current Task                | Task 5.4: Manual Payment Workflow (FamPay QR & UTR) |
-| Completed Development Tasks | 10                                                  |
+| Current Task                | Task 5.5: Player Registration History & Live Status  |
+| Completed Development Tasks | 11                                                  |
 | Blocked Tasks               | 0                                                   |
 | Last Updated                | 31-10-2026                                          |
 
@@ -38,6 +38,7 @@ Record all successfully implemented and tested tasks here.
 | TASK-5.1 | Tournament Listing Page & Public Discovery                                                    | 31-10-2026      | PASS        |
 | TASK-5.2 | Tournament Details Page & Rules Display                                                       | 31-10-2026      | PASS        |
 | TASK-5.3 | Tournament Registration Workflow & Team Selection                                             | 31-10-2026      | PASS        |
+| TASK-5.4 | Manual Payment Workflow (FamPay QR & UTR Submission)                                          | 31-10-2026      | PASS        |
 
 Rules:
 
@@ -48,31 +49,29 @@ Rules:
 
 ## 3. Current Task
 
-**Task ID:** TASK-5.4  
-**Task Name:** Manual Payment Workflow (FamPay QR & UTR Submission)  
+**Task ID:** TASK-5.5  
+**Task Name:** Player Dashboard Registration History & Live Status Tracking  
 **Status:** NOT_STARTED  
 
 ### Task Description
 
-Construct the manual FamPay UPI QR code payment submission workflow (`/tournaments/[id]/payment`) according to `ui-context.md` (Section 3.6) and `features.md` (Section 5):
-- Displays active tournament registration brief and exact payment amount in INR.
-- Displays organizer FamPay UPI QR code with copyable UPI VPA and instructions.
-- Form collecting 12-digit UPI transaction reference (UTR) with format validation.
-- Screenshot proof upload with image preview.
-- Concurrency-safe creation or update of `Payment` record with status `UNDER_VERIFICATION`.
-- Transitions `Registration` status to `PAYMENT_SUBMITTED`.
-- Clear submission confirmation and guidance regarding admin review timeline.
+Construct the dedicated player dashboard tournament registration and payment tracking views (`/dashboard/tournaments` and `/dashboard/payments`) according to `ui-context.md` (Section 4.3 & 4.4) and `features.md` (Section 3.5 & 4.4):
+- Query and display all tournament registrations submitted by the authenticated player.
+- Live status badges: `PENDING_PAYMENT`, `PAYMENT_SUBMITTED`, `CONFIRMED`, `REJECTED`, `CANCELLED`.
+- Transparent feedback: Display admin notes and rejection reasons when payment is rejected with a 1-click re-submit CTA.
+- Detailed squad view: display roster players with Free Fire in-game UIDs.
+- Room credentials preview: displays "Room credentials unlock 15 minutes before match start" or live room ID/password when status is `CONFIRMED` and room is open.
 
 ### Completed Work
 
-- Registration flow creates `Registration` with `PENDING_PAYMENT` and redirects to payment.
+- Registration and manual payment flow completed.
 
 ### Remaining Work
 
-- Plan TASK-5.4 and obtain user approval.
-- Implement payment submission service & actions with duplicate UTR detection.
-- Implement payment form component with QR code display and UTR validation.
-- Implement `/tournaments/[id]/payment/page.tsx`.
+- Plan TASK-5.5 and obtain user approval.
+- Implement player registrations and payments fetching service.
+- Implement registration card and status timeline components.
+- Implement `/dashboard/tournaments/page.tsx` and `/dashboard/payments/page.tsx`.
 - Run typecheck, lint, and build tests.
 - Commit and push to GitHub.
 
@@ -90,11 +89,11 @@ None.
 
 ## 4. Next Task
 
-**Task ID:** TASK-5.5  
-**Task Name:** Player Dashboard Registration History & Live Status Tracking
+**Task ID:** TASK-6.1  
+**Task Name:** Admin Payment Verification Queue & Screenshot Review Modal
 
 Describe the next task that should be undertaken after the current task is completed and verified:
-Construct the player dashboard registration status and history pages (`/dashboard/tournaments` and `/dashboard/payments`) displaying real-time status pills (`PENDING_PAYMENT`, `UNDER_VERIFICATION`, `CONFIRMED`, `REJECTED`), admin notes/rejection reasons, and next actionable steps.
+Construct the admin manual payment verification workbench (`/admin/payments`), featuring a side-by-side transaction review modal with high-res screenshot viewer, UTR copy button, bank statement matching status, and 1-click Approve / Reject with custom rejection reason dialog.
 
 Do not begin this task while the current task remains incomplete.
 
@@ -132,6 +131,7 @@ Record the actual tests performed for the current task.
 | TEST-12 | Tournament Listing & Discovery Build & Check    | Clean compilation        | Passed: typecheck, lint, build (λ)  | PASS        |
 | TEST-13 | Tournament Details Page, Rules & Action Card    | Clean compilation        | Passed: typecheck, lint, build (λ)  | PASS        |
 | TEST-14 | Tournament Registration Workflow & Team Select   | Clean compilation        | Passed: typecheck, lint, build (λ)  | PASS        |
+| TEST-15 | Manual Payment Workflow (FamPay QR & UTR) Check  | Clean compilation        | Passed: typecheck, lint, build (λ)  | PASS        |
 
 Testing rules:
 
@@ -192,6 +192,7 @@ Maintain a concise chronological record of significant development activities.
 | 31-10-2026 | TASK-5.1 | Tournament Listing Page & Public Discovery                      | Completed   |
 | 31-10-2026 | TASK-5.2 | Tournament Details Page & Rules Display                         | Completed   |
 | 31-10-2026 | TASK-5.3 | Tournament Registration Workflow & Team Selection               | Completed   |
+| 31-10-2026 | TASK-5.4 | Manual Payment Workflow (FamPay QR & UTR Submission)            | Completed   |
 
 ## 10. Mandatory Task Workflow
 
